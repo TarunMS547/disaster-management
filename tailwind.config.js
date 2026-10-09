@@ -35,8 +35,8 @@ export default {
         '2xl': ['1.68rem', { lineHeight: '2.15rem' }],
       },
       fontFamily: {
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        sans: ['DM Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
         'glow-cyan': '0 4px 14px 0 rgba(2, 132, 199, 0.25)',
