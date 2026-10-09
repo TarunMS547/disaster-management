@@ -4,7 +4,6 @@ import { TopBar } from '../components/layout/TopBar';
 import { IncidentPanel } from '../components/panels/IncidentPanel';
 import { EntityDetailPanel } from '../components/panels/EntityDetailPanel';
 import { AgentReasoningPanel } from '../components/panels/AgentReasoningPanel';
-import { TimelinePanel } from '../components/panels/TimelinePanel';
 import { EventTriggerDialog } from '../components/panels/EventTriggerDialog';
 import { DigitalTwinScene } from '../components/scene/DigitalTwinScene';
 import { OpenStreetMapScene } from '../components/scene/OpenStreetMapScene';
@@ -60,9 +59,6 @@ export const CommandCenterPage: React.FC = () => {
               )}
             </div>
           </div>
-
-          {/* Bottom Timeline Drawer */}
-          <TimelinePanel />
         </div>
 
         {/* Right Panel: Selected Facility / Vehicle Telemetry */}
