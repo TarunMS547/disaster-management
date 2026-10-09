@@ -158,14 +158,48 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTriggerDialog }) => {
           <span className="hidden md:inline">INJECT DISASTER</span>
         </button>
 
-        {/* 2D / 3D Mode Toggle */}
-        <button
-          onClick={() => setViewMode(viewMode === '3d' ? '2d_fallback' : '3d')}
-          className="p-2 rounded-lg bg-ares-card hover:bg-ares-border border border-ares-border text-ares-subtext hover:text-ares-accent transition-colors"
-          title={`Switch to ${viewMode === '3d' ? '2D Schematic' : '3D Twin'}`}
-        >
-          <Layers className="w-4 h-4" />
-        </button>
+        {/* 3D / OpenStreetMap / 2D Mode Switcher */}
+        <div className="flex items-center bg-ares-card rounded-lg border border-ares-border p-0.5 text-xs font-mono">
+          <button
+            id="btn-mode-3d"
+            onClick={() => setViewMode('3d')}
+            className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
+              viewMode === '3d'
+                ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                : 'text-ares-subtext hover:text-ares-text'
+            }`}
+            title="3D Digital Twin City Model"
+          >
+            <span>3D TWIN</span>
+          </button>
+
+          <button
+            id="btn-mode-osm"
+            onClick={() => setViewMode('osm')}
+            className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
+              viewMode === 'osm'
+                ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                : 'text-ares-subtext hover:text-ares-text'
+            }`}
+            title="Interactive OpenStreetMap (OSM)"
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>OPENSTREET</span>
+          </button>
+
+          <button
+            id="btn-mode-2d"
+            onClick={() => setViewMode('2d_fallback')}
+            className={`px-2 py-1 rounded transition-all font-bold hidden xl:inline-block ${
+              viewMode === '2d_fallback'
+                ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                : 'text-ares-subtext hover:text-ares-text'
+            }`}
+            title="Accessible 2D Schematic"
+          >
+            <span>2D</span>
+          </button>
+        </div>
 
         {/* Save Run */}
         <button

@@ -24,7 +24,7 @@ interface SimulationContextType {
   engine: SimulationEngine;
   state: SimulationState;
   selectedEntity: SelectedEntity;
-  viewMode: '3d' | '2d_fallback';
+  viewMode: '3d' | 'osm' | '2d_fallback';
   comparison: ComparisonResults | null;
   start: () => void;
   pause: () => void;
@@ -34,7 +34,7 @@ interface SimulationContextType {
   switchScenario: (key: ScenarioDefinition['key'], seed?: number) => void;
   triggerUserIncident: (params: { type: Incident['type']; targetId: string; description: string }) => void;
   selectEntity: (type: SelectedEntity['type'], id: string | null) => void;
-  setViewMode: (mode: '3d' | '2d_fallback') => void;
+  setViewMode: (mode: '3d' | 'osm' | '2d_fallback') => void;
   runBaselineComparison: () => void;
   saveCurrentRun: () => Promise<boolean>;
 }
@@ -46,7 +46,7 @@ export const SimulationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [engine, setEngine] = useState<SimulationEngine>(() => new SimulationEngine('urban_flood'));
   const [state, setState] = useState<SimulationState>(() => engine.getState());
   const [selectedEntity, setSelectedEntity] = useState<SelectedEntity>({ type: null, id: null });
-  const [viewMode, setViewMode] = useState<'3d' | '2d_fallback'>('3d');
+  const [viewMode, setViewMode] = useState<'3d' | 'osm' | '2d_fallback'>('3d');
   const [comparison, setComparison] = useState<ComparisonResults | null>(null);
 
   useEffect(() => {

@@ -7,6 +7,7 @@ import { AgentReasoningPanel } from '../components/panels/AgentReasoningPanel';
 import { TimelinePanel } from '../components/panels/TimelinePanel';
 import { EventTriggerDialog } from '../components/panels/EventTriggerDialog';
 import { DigitalTwinScene } from '../components/scene/DigitalTwinScene';
+import { OpenStreetMapScene } from '../components/scene/OpenStreetMapScene';
 import { Fallback2DMap } from '../components/scene/Fallback2DMap';
 import { Bot, Layers } from 'lucide-react';
 
@@ -25,10 +26,16 @@ export const CommandCenterPage: React.FC = () => {
         {/* Left Rail: Incident Severity & Requests */}
         <IncidentPanel />
 
-        {/* Center: Interactive 3D Digital Twin or 2D Accessible Fallback */}
+        {/* Center: Interactive 3D Digital Twin, OpenStreetMap, or 2D Accessible Fallback */}
         <div className="flex-1 relative flex flex-col overflow-hidden">
           <div className="flex-1 relative">
-            {viewMode === '3d' ? <DigitalTwinScene /> : <Fallback2DMap />}
+            {viewMode === '3d' ? (
+              <DigitalTwinScene />
+            ) : viewMode === 'osm' ? (
+              <OpenStreetMapScene />
+            ) : (
+              <Fallback2DMap />
+            )}
 
             {/* Floating Agent Reasoning Pipeline Drawer/Overlay */}
             <div className="absolute top-4 right-4 z-10 max-w-sm w-full">

@@ -150,6 +150,14 @@ export const SettingsPage: React.FC = () => {
               3D DIGITAL TWIN
             </button>
             <button
+              onClick={() => setViewMode('osm')}
+              className={`px-3 py-1.5 rounded transition-all font-bold ${
+                viewMode === 'osm' ? 'bg-ares-accent text-ares-bg' : 'text-ares-subtext hover:text-ares-text'
+              }`}
+            >
+              OPENSTREET MAP (OSM)
+            </button>
+            <button
               onClick={() => setViewMode('2d_fallback')}
               className={`px-3 py-1.5 rounded transition-all font-bold ${
                 viewMode === '2d_fallback' ? 'bg-ares-accent text-ares-bg' : 'text-ares-subtext hover:text-ares-text'
