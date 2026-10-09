@@ -35,8 +35,8 @@ export const CityBuildings: React.FC = () => {
       [36, -36],
     ];
 
-    const facadePalettes = ['#1e293b', '#0f172a', '#334155', '#1e1b4b', '#022c43'];
-    const glassPalettes = ['#0284c7', '#0369a1', '#0ea5e9', '#38bdf8', '#00e5ff'];
+    const facadePalettes = ['#cbd5e1', '#94a3b8', '#e2e8f0', '#b0c4de', '#d1d5db'];
+    const glassPalettes = ['#38bdf8', '#0ea5e9', '#60a5fa', '#0284c7', '#7dd3fc'];
 
     for (const [bx, bz] of blockCenters) {
       // 4 distinct architectural buildings per block

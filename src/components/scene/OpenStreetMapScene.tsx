@@ -41,7 +41,7 @@ export const OpenStreetMapScene: React.FC = () => {
   const routesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const hazardsLayerGroupRef = useRef<L.LayerGroup | null>(null);
 
-  const [activeProvider, setActiveProvider] = useState<TileProvider>('dark');
+  const [activeProvider, setActiveProvider] = useState<TileProvider>('standard');
 
   // 1. Initialize Leaflet Map
   useEffect(() => {
@@ -377,17 +377,17 @@ export const OpenStreetMapScene: React.FC = () => {
       <div className="absolute top-4 left-4 z-[400] flex flex-wrap items-center gap-2">
         <div className="bg-ares-card/90 backdrop-blur-md p-1.5 rounded-lg border border-ares-border flex items-center gap-1 text-xs font-mono shadow-xl">
           <Layers className="w-3.5 h-3.5 text-ares-accent ml-1 mr-1" />
-          {(['dark', 'standard', 'humanitarian'] as const).map(providerKey => (
+          {(['standard', 'humanitarian', 'dark'] as const).map(providerKey => (
             <button
               key={providerKey}
               onClick={() => setActiveProvider(providerKey)}
               className={`px-2.5 py-1 rounded transition-colors ${
                 activeProvider === providerKey
-                  ? 'bg-ares-accent text-ares-bg font-bold'
+                  ? 'bg-ares-accent text-white font-bold'
                   : 'text-ares-subtext hover:text-ares-text'
               }`}
             >
-              {providerKey === 'dark' ? 'OSM Dark' : providerKey === 'standard' ? 'OSM Standard' : 'OSM Disaster'}
+              {providerKey === 'standard' ? 'OSM Standard' : providerKey === 'humanitarian' ? 'OSM Disaster' : 'OSM Dark'}
             </button>
           ))}
         </div>
