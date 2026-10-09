@@ -27,8 +27,8 @@ export const SideRail: React.FC = () => {
   ];
 
   return (
-    <aside className="w-16 md:w-56 bg-ares-surface border-r border-ares-border flex flex-col justify-between py-4 select-none shrink-0 z-20">
-      <div className="space-y-1 px-2">
+    <aside className="w-full md:w-56 h-14 md:h-auto order-last md:order-first bg-ares-surface border-t md:border-t-0 md:border-r border-ares-border flex md:flex-col justify-between py-1 md:py-4 select-none shrink-0 z-30">
+      <div className="flex md:flex-col justify-around md:justify-start w-full space-y-0 md:space-y-1 px-1 md:px-2">
         <div className="hidden md:block px-3 py-2 text-[10px] font-mono uppercase text-ares-muted tracking-wider">
           Operations
         </div>
@@ -39,7 +39,7 @@ export const SideRail: React.FC = () => {
             to={item.to}
             end={item.to === '/app' || item.to === '/app/simulations/new'}
             className={({ isActive }) => `
-              flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-mono font-medium transition-all
+              flex flex-col md:flex-row items-center gap-1 md:gap-3 px-2 md:px-3 py-1.5 md:py-2.5 rounded-lg text-[10px] md:text-xs font-mono font-medium transition-all
               ${isActive 
                 ? 'bg-ares-accent/15 text-ares-accent border border-ares-accent/30 shadow-glow-cyan' 
                 : 'text-ares-subtext hover:bg-ares-card hover:text-ares-text'}

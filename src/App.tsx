@@ -15,9 +15,9 @@ import { SettingsPage } from './pages/SettingsPage';
 // Layout wrapper for all /app routes
 const AppLayout: React.FC = () => {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-ares-bg text-ares-text">
+    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-ares-bg text-ares-text">
       <SideRail />
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative min-w-0">
         <Outlet />
       </main>
     </div>

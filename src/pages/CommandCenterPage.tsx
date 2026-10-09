@@ -14,19 +14,56 @@ export const CommandCenterPage: React.FC = () => {
   const { viewMode } = useSimulation();
   const [isTriggerOpen, setIsTriggerOpen] = useState(false);
   const [showAgentPanel, setShowAgentPanel] = useState(true);
+  const [mobileTab, setMobileTab] = useState<'map' | 'threats' | 'telemetry'>('map');
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden select-none bg-ares-bg">
       {/* Top Operations Bar */}
       <TopBar onOpenTriggerDialog={() => setIsTriggerOpen(true)} />
 
-      {/* Main 3-Column / 5-Zone Operations Canvas */}
+      {/* Mobile View Switcher Tab Bar (only visible on small screens < md) */}
+      <div className="flex md:hidden bg-ares-card border-b border-ares-border font-mono text-xs">
+        <button
+          onClick={() => setMobileTab('threats')}
+          className={`flex-1 py-2 text-center font-bold border-b-2 transition-all ${
+            mobileTab === 'threats'
+              ? 'border-ares-accent text-ares-accent bg-ares-accentMuted'
+              : 'border-transparent text-ares-subtext'
+          }`}
+        >
+          ⚡ Threats
+        </button>
+        <button
+          onClick={() => setMobileTab('map')}
+          className={`flex-1 py-2 text-center font-bold border-b-2 transition-all ${
+            mobileTab === 'map'
+              ? 'border-ares-accent text-ares-accent bg-ares-accentMuted'
+              : 'border-transparent text-ares-subtext'
+          }`}
+        >
+          🗺️ Live Map
+        </button>
+        <button
+          onClick={() => setMobileTab('telemetry')}
+          className={`flex-1 py-2 text-center font-bold border-b-2 transition-all ${
+            mobileTab === 'telemetry'
+              ? 'border-ares-accent text-ares-accent bg-ares-accentMuted'
+              : 'border-transparent text-ares-subtext'
+          }`}
+        >
+          📡 Telemetry
+        </button>
+      </div>
+
+      {/* Main Operations Canvas (Responsive on Mobile) */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Left Rail: Incident Severity & Requests */}
-        <IncidentPanel />
+        {/* Left Rail: Incident Severity & Requests (Hidden on mobile unless threats tab active) */}
+        <div className={`${mobileTab === 'threats' ? 'flex flex-1 w-full' : 'hidden'} md:flex md:w-80 h-full`}>
+          <IncidentPanel />
+        </div>
 
         {/* Center: Interactive 3D Digital Twin, OpenStreetMap, or 2D Accessible Fallback */}
-        <div className="flex-1 relative flex flex-col overflow-hidden">
+        <div className={`flex-1 relative flex flex-col overflow-hidden ${mobileTab === 'map' ? 'flex' : 'hidden md:flex'}`}>
           <div className="flex-1 relative">
             {viewMode === '3d' ? (
               <DigitalTwinScene />
@@ -61,8 +98,10 @@ export const CommandCenterPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Panel: Selected Facility / Vehicle Telemetry */}
-        <EntityDetailPanel />
+        {/* Right Panel: Selected Facility / Vehicle Telemetry (Hidden on mobile unless telemetry tab active) */}
+        <div className={`${mobileTab === 'telemetry' ? 'flex flex-1 w-full' : 'hidden'} md:flex md:w-88 h-full`}>
+          <EntityDetailPanel />
+        </div>
       </div>
 
       {/* Manual Disaster Intervention Dialog */}

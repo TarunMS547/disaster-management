@@ -26,26 +26,26 @@ export const RoadNetwork: React.FC<RoadNetworkProps> = ({
 
   return (
     <group>
-      {/* 1. Realistic Multi-Lane Asphalt Highways & Bridges */}
+      {/* 1. Flat Asphalt Road Surface & Markings */}
       {edges.map(edge => {
         const p1 = nodeMap.get(edge.fromNode);
         const p2 = nodeMap.get(edge.toNode);
         if (!p1 || !p2) return null;
 
-        const start = new THREE.Vector3(p1[0], 0.1, p1[2]);
-        const end = new THREE.Vector3(p2[0], 0.1, p2[2]);
+        const start = new THREE.Vector3(p1[0], 0.02, p1[2]);
+        const end = new THREE.Vector3(p2[0], 0.02, p2[2]);
         const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
         const distance = start.distanceTo(end);
 
-        // Direction & rotation
-        const direction = new THREE.Vector3().subVectors(end, start).normalize();
-        const orientation = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+        // Direction & rotation around Y axis
+        const dx = end.x - start.x;
+        const dz = end.z - start.z;
+        const angle = Math.atan2(dx, dz);
 
         const isBlocked = edge.status === 'blocked';
         const isSlow = edge.status === 'slow';
         const isRiverBridge = (p1[2] < 12 && p2[2] > 12) || (p1[2] > 12 && p2[2] < 12);
-
-        const roadWidth = 2.8;
+        const roadWidth = 3.2;
 
         return (
           <group 
@@ -55,140 +55,105 @@ export const RoadNetwork: React.FC<RoadNetworkProps> = ({
               onSelectEdge?.(edge.id);
             }}
           >
-            {/* Main Asphalt Road Surface */}
-            <mesh position={[mid.x, 0.08, mid.z]} quaternion={orientation} receiveShadow>
-              <cylinderGeometry args={[roadWidth / 2, roadWidth / 2, distance, 12]} />
+            {/* Flat Asphalt Surface */}
+            <mesh position={[mid.x, 0.02, mid.z]} rotation={[-Math.PI / 2, 0, -angle]} receiveShadow>
+              <planeGeometry args={[roadWidth, distance]} />
               <meshStandardMaterial 
                 color={isBlocked ? '#450a0a' : isSlow ? '#292524' : '#1e293b'} 
-                roughness={0.85} 
-                metalness={0.1}
+                roughness={0.9} 
+                metalness={0.05}
               />
             </mesh>
 
-            {/* Concrete Sidewalks & Curbs (Left & Right) */}
-            <mesh position={[mid.x, 0.11, mid.z]} quaternion={orientation} receiveShadow>
-              <cylinderGeometry args={[(roadWidth + 0.6) / 2, (roadWidth + 0.6) / 2, distance, 12]} />
-              <meshStandardMaterial color="#475569" roughness={0.7} />
+            {/* Flat Outer Shoulders / Curbs */}
+            <mesh position={[mid.x, 0.018, mid.z]} rotation={[-Math.PI / 2, 0, -angle]} receiveShadow>
+              <planeGeometry args={[roadWidth + 0.5, distance]} />
+              <meshStandardMaterial color="#475569" roughness={0.95} />
             </mesh>
 
-            {/* Double Solid Yellow Centerline (When Open) */}
+            {/* Flat Yellow Center Striping (when open) */}
             {!isBlocked && (
-              <mesh position={[mid.x, 0.12, mid.z]} quaternion={orientation}>
-                <cylinderGeometry args={[0.06, 0.06, distance * 0.96, 6]} />
+              <mesh position={[mid.x, 0.025, mid.z]} rotation={[-Math.PI / 2, 0, -angle]}>
+                <planeGeometry args={[0.12, distance * 0.98]} />
                 <meshBasicMaterial color="#eab308" />
               </mesh>
             )}
 
-            {/* Bridge Support Pillars & Truss Arches across River */}
+            {/* Flat Bridge Deck when spanning River */}
             {isRiverBridge && (
-              <group position={[mid.x, 0, mid.z]} quaternion={orientation}>
-                {/* Massive Concrete Water Pier Pillars */}
-                <mesh position={[0, -2.5, 0]}>
-                  <cylinderGeometry args={[0.8, 1.2, 5.0, 12]} />
-                  <meshStandardMaterial color="#475569" roughness={0.8} />
+              <group position={[mid.x, 0, mid.z]}>
+                {/* Bridge Water Pier Bases */}
+                <mesh position={[0, -1.8, 0]}>
+                  <boxGeometry args={[roadWidth * 1.2, 3.6, 1.8]} />
+                  <meshStandardMaterial color="#334155" roughness={0.8} />
                 </mesh>
-                {/* Bridge Suspension Steel Cables */}
-                <mesh position={[roadWidth / 2, 2.0, 0]}>
-                  <cylinderGeometry args={[0.06, 0.06, distance * 0.8, 8]} />
-                  <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+                {/* Minimal Flat Bridge Guardrails */}
+                <mesh position={[roadWidth / 2 + 0.15, 0.4, 0]} rotation={[0, angle, 0]}>
+                  <boxGeometry args={[0.15, 0.6, distance * 0.9]} />
+                  <meshStandardMaterial color="#64748b" metalness={0.8} />
                 </mesh>
-                <mesh position={[-roadWidth / 2, 2.0, 0]}>
-                  <cylinderGeometry args={[0.06, 0.06, distance * 0.8, 8]} />
-                  <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+                <mesh position={[-roadWidth / 2 - 0.15, 0.4, 0]} rotation={[0, angle, 0]}>
+                  <boxGeometry args={[0.15, 0.6, distance * 0.9]} />
+                  <meshStandardMaterial color="#64748b" metalness={0.8} />
                 </mesh>
               </group>
             )}
 
-            {/* Street Lamp Posts with Warm Point Lights */}
-            {[-distance * 0.3, distance * 0.3].map((offDist, li) => {
-              const lampPos = new THREE.Vector3().copy(mid).add(direction.clone().multiplyScalar(offDist));
-              return (
-                <group key={li} position={[lampPos.x + 1.6, 0, lampPos.z]}>
-                  {/* Steel Pole */}
-                  <mesh position={[0, 1.6, 0]}>
-                    <cylinderGeometry args={[0.05, 0.08, 3.2, 8]} />
-                    <meshStandardMaterial color="#334155" metalness={0.8} />
-                  </mesh>
-                  {/* Lamp Fixture */}
-                  <mesh position={[-0.3, 3.2, 0]}>
-                    <boxGeometry args={[0.6, 0.1, 0.2]} />
-                    <meshStandardMaterial color="#fef08a" emissive="#fef08a" emissiveIntensity={1.5} />
-                  </mesh>
-                  <pointLight position={[-0.3, 3.0, 0]} color="#fef08a" intensity={0.4} distance={9} />
-                </group>
-              );
-            })}
-
-            {/* Blocked Disaster Barricades & Emergency Flashers */}
+            {/* Disaster Barricade when blocked */}
             {isBlocked && (
-              <group position={[mid.x, 0.6, mid.z]}>
-                {/* Striped Police / National Guard Barricade */}
+              <group position={[mid.x, 0.4, mid.z]}>
                 <mesh castShadow>
-                  <boxGeometry args={[roadWidth * 1.1, 0.8, 0.3]} />
+                  <boxGeometry args={[roadWidth * 0.95, 0.7, 0.2]} />
                   <meshStandardMaterial color="#ef4444" roughness={0.3} />
                 </mesh>
-                <mesh position={[0, 0, 0.16]}>
-                  <planeGeometry args={[roadWidth * 0.9, 0.25]} />
+                <mesh position={[0, 0, 0.12]}>
+                  <planeGeometry args={[roadWidth * 0.8, 0.2]} />
                   <meshBasicMaterial color="#ffffff" side={THREE.DoubleSide} />
                 </mesh>
-                {/* Flashing Amber Hazard Beacons */}
-                <mesh position={[-1.2, 0.55, 0]}>
-                  <cylinderGeometry args={[0.15, 0.15, 0.3, 12]} />
-                  <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={3.0} />
-                </mesh>
-                <mesh position={[1.2, 0.55, 0]}>
-                  <cylinderGeometry args={[0.15, 0.15, 0.3, 12]} />
-                  <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={3.0} />
-                </mesh>
-                <pointLight position={[0, 0.8, 0]} color="#ef4444" intensity={2.5} distance={10} />
+                <pointLight position={[0, 0.5, 0]} color="#ef4444" intensity={2} distance={8} />
               </group>
             )}
           </group>
         );
       })}
 
-      {/* 2. Active Transit Glowing Route Tubes */}
+      {/* 2. Active Transit Flat Glowing Route Ribbon */}
       {activeDeliveries.map(del => {
         if (!del.routeNodeIds || del.routeNodeIds.length < 2) return null;
         const points = del.routeNodeIds
           .map(id => nodeMap.get(id))
           .filter((p): p is [number, number, number] => p !== undefined)
-          .map(p => new THREE.Vector3(p[0], 0.28, p[2]));
+          .map(p => new THREE.Vector3(p[0], 0.08, p[2]));
 
         if (points.length < 2) return null;
         const lineCurve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
-        const tubeGeo = new THREE.TubeGeometry(lineCurve, 24, 0.25, 8, false);
+        const tubeGeo = new THREE.TubeGeometry(lineCurve, 24, 0.14, 8, false);
 
         return (
           <mesh key={`path-${del.id}`} geometry={tubeGeo}>
             <meshStandardMaterial 
               color="#00e5ff" 
               emissive="#00e5ff" 
-              emissiveIntensity={1.2} 
+              emissiveIntensity={1.5} 
               transparent 
-              opacity={0.8} 
+              opacity={0.85} 
             />
           </mesh>
         );
       })}
 
-      {/* 3. Circular Intersection Plazas with Traffic Circles */}
+      {/* 3. Flat Circular Intersections & Junction Plazas */}
       {nodes.map(node => (
-        <group key={node.id} position={[node.position[0], 0.1, node.position[2]]}>
-          {/* Asphalt Circle */}
-          <mesh receiveShadow>
-            <cylinderGeometry args={[2.5, 2.5, 0.1, 24]} />
-            <meshStandardMaterial color="#1e293b" roughness={0.85} />
+        <group key={node.id} position={[node.position[0], 0.022, node.position[2]]}>
+          {/* Flat Asphalt Node Disk */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <circleGeometry args={[2.4, 32]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.9} />
           </mesh>
-          {/* Center Roundabout Island */}
-          <mesh position={[0, 0.1, 0]} receiveShadow>
-            <cylinderGeometry args={[1.1, 1.1, 0.18, 24]} />
-            <meshStandardMaterial color="#334155" roughness={0.6} />
-          </mesh>
-          {/* Small Center Grass Mound */}
-          <mesh position={[0, 0.2, 0]}>
-            <cylinderGeometry args={[0.9, 0.9, 0.05, 16]} />
-            <meshStandardMaterial color="#15803d" roughness={0.9} />
+          {/* Inner Traffic Junction Marker */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]}>
+            <ringGeometry args={[1.6, 1.75, 32]} />
+            <meshBasicMaterial color="#eab308" side={THREE.DoubleSide} transparent opacity={0.6} />
           </mesh>
         </group>
       ))}

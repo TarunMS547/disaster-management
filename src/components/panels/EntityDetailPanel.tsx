@@ -17,7 +17,7 @@ export const EntityDetailPanel: React.FC = () => {
 
   if (!selectedEntity.id) {
     return (
-      <div className="w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full select-none p-6 items-center justify-center text-center">
+      <div className="w-full md:w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full select-none p-6 items-center justify-center text-center">
         <div className="w-12 h-12 rounded-full bg-ares-card border border-ares-border flex items-center justify-center text-ares-muted mb-3">
           <Navigation className="w-5 h-5 animate-pulse text-ares-accent" />
         </div>
@@ -39,7 +39,7 @@ export const EntityDetailPanel: React.FC = () => {
     const isOffline = facility.operationalStatus === 'offline';
 
     return (
-      <div className="w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full overflow-hidden select-none">
+      <div className="w-full md:w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full overflow-hidden select-none">
         <div className="p-4 border-b border-ares-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Building2 className="w-4 h-4 text-ares-accent" />
@@ -140,7 +140,7 @@ export const EntityDetailPanel: React.FC = () => {
     const assignedDelivery = state.deliveries.find(d => d.id === vehicle.assignedDeliveryId);
 
     return (
-      <div className="w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full overflow-hidden select-none">
+      <div className="w-full md:w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full overflow-hidden select-none">
         <div className="p-4 border-b border-ares-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Truck className="w-4 h-4 text-ares-accent" />
@@ -214,7 +214,7 @@ export const EntityDetailPanel: React.FC = () => {
     if (!edge) return null;
 
     return (
-      <div className="w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full overflow-hidden select-none p-4 space-y-4 font-mono text-xs">
+      <div className="w-full md:w-88 bg-ares-surface/95 border-l border-ares-border flex flex-col h-full overflow-hidden select-none p-4 space-y-4 font-mono text-xs">
         <div className="flex items-center justify-between border-b border-ares-border pb-3">
           <span className="font-bold text-ares-text">ROAD SEGMENT TELEMETRY</span>
           <button onClick={() => selectEntity(null, null)}><X className="w-4 h-4 text-ares-muted" /></button>

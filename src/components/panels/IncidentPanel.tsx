@@ -21,7 +21,7 @@ export const IncidentPanel: React.FC = () => {
   const activeIncidents = state.incidents.filter(i => !i.resolved);
 
   return (
-    <div className="w-80 bg-ares-surface/95 border-r border-ares-border flex flex-col h-full overflow-hidden select-none">
+    <div className="w-full md:w-80 bg-ares-surface/95 border-r border-ares-border flex flex-col h-full overflow-hidden select-none">
       {/* Header */}
       <div className="p-4 border-b border-ares-border flex items-center justify-between">
         <div className="flex items-center gap-2">
