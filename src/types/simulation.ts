@@ -108,7 +108,17 @@ export interface DeliveryTransfer {
   pathCoordinates?: [number, number, number][];
 }
 
-export type IncidentType = 'flood_expansion' | 'road_closure' | 'demand_spike' | 'warehouse_outage' | 'vehicle_breakdown';
+export type IncidentType = 
+  | 'flood_expansion' 
+  | 'earthquake' 
+  | 'landslide' 
+  | 'weather_change' 
+  | 'acid_rain' 
+  | 'satellite_fall' 
+  | 'road_closure' 
+  | 'demand_spike' 
+  | 'warehouse_outage' 
+  | 'vehicle_breakdown';
 
 export interface Incident {
   id: string;

@@ -71,28 +71,53 @@ export const IncidentPanel: React.FC = () => {
               No active disaster breaches reported.
             </div>
           ) : (
-            activeIncidents.map(inc => (
-              <div
-                key={inc.id}
-                className="p-3 rounded-lg bg-ares-critical/10 border border-ares-critical/30 space-y-1.5 shadow-sm"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-ares-critical truncate">
-                    {inc.name}
-                  </span>
-                  <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-ares-critical/20 text-ares-critical">
-                    {inc.severity}
-                  </span>
+            activeIncidents.map(inc => {
+              let tagColor = 'border-ares-critical/40 bg-ares-critical/10 text-ares-critical';
+              let badgeLabel = 'HAZARD';
+
+              if (inc.type === 'flood_expansion') {
+                tagColor = 'border-sky-500/40 bg-sky-950/30 text-sky-400';
+                badgeLabel = 'FLOOD';
+              } else if (inc.type === 'earthquake') {
+                tagColor = 'border-orange-500/40 bg-orange-950/30 text-orange-400';
+                badgeLabel = 'QUAKE';
+              } else if (inc.type === 'landslide') {
+                tagColor = 'border-amber-600/40 bg-amber-950/30 text-amber-400';
+                badgeLabel = 'SLIDE';
+              } else if (inc.type === 'weather_change') {
+                tagColor = 'border-purple-500/40 bg-purple-950/30 text-purple-400';
+                badgeLabel = 'STORM';
+              } else if (inc.type === 'acid_rain') {
+                tagColor = 'border-lime-500/40 bg-lime-950/30 text-lime-400';
+                badgeLabel = 'ACID';
+              } else if (inc.type === 'satellite_fall') {
+                tagColor = 'border-rose-600/40 bg-rose-950/30 text-rose-400';
+                badgeLabel = 'ORBITAL';
+              }
+
+              return (
+                <div
+                  key={inc.id}
+                  className={`p-3 rounded-lg border space-y-1.5 shadow-sm transition-all ${tagColor}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold truncate">
+                      {inc.name}
+                    </span>
+                    <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded border border-current font-bold">
+                      {badgeLabel} • {inc.severity}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-ares-subtext leading-relaxed">
+                    {inc.description}
+                  </p>
+                  <div className="text-[10px] font-mono text-ares-muted flex items-center justify-between pt-1 border-t border-current/20">
+                    <span>START: TICK {inc.startTick}</span>
+                    <span>RAD: {inc.radius}m</span>
+                  </div>
                 </div>
-                <p className="text-[11px] text-ares-subtext leading-relaxed">
-                  {inc.description}
-                </p>
-                <div className="text-[10px] font-mono text-ares-muted flex items-center justify-between pt-1 border-t border-ares-critical/20">
-                  <span>START: TICK {inc.startTick}</span>
-                  <span>RAD: {inc.radius}m</span>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 

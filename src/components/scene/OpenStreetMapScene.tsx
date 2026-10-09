@@ -203,11 +203,17 @@ export const OpenStreetMapScene: React.FC = () => {
       }
     }
 
-    // C. Draw Hazard / Flood Zones
+    // C. Draw Hazard / Disaster Zones
     for (const inc of state.incidents) {
       const center = simPosToLatLng(inc.position);
-      const isFlood = inc.type === 'flood_expansion';
-      const color = isFlood ? '#0284c7' : '#ef4444';
+      let color = '#ef4444';
+      if (inc.type === 'flood_expansion') color = '#0284c7';
+      else if (inc.type === 'earthquake') color = '#ea580c';
+      else if (inc.type === 'landslide') color = '#b45309';
+      else if (inc.type === 'weather_change') color = '#8b5cf6';
+      else if (inc.type === 'acid_rain') color = '#84cc16';
+      else if (inc.type === 'satellite_fall') color = '#dc2626';
+
       const radiusMeters = Math.max(300, (inc.radius || 8) * 120);
 
       const circle = L.circle(center, {
@@ -222,7 +228,7 @@ export const OpenStreetMapScene: React.FC = () => {
       circle.bindPopup(`
         <div>
           <strong style="color: ${color}; font-size: 12px;">HAZARD: ${inc.name.toUpperCase()}</strong><br/>
-          <span>Type: ${inc.type.replace('_', ' ')}</span><br/>
+          <span>Type: <strong>${inc.type.replace('_', ' ').toUpperCase()}</strong></span><br/>
           <span>Severity: <strong style="color: #f43f5e;">${inc.severity.toUpperCase()}</strong></span><br/>
           <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 11px;">${inc.description}</p>
         </div>

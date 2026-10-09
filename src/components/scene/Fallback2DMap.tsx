@@ -65,15 +65,23 @@ export const Fallback2DMap: React.FC = () => {
           {/* Hazard Zones */}
           {state.incidents.map(inc => {
             const [hx, hy] = project(inc.position[0], inc.position[2]);
+            let color = '#ef4444';
+            if (inc.type === 'flood_expansion') color = '#0284c7';
+            else if (inc.type === 'earthquake') color = '#ea580c';
+            else if (inc.type === 'landslide') color = '#b45309';
+            else if (inc.type === 'weather_change') color = '#8b5cf6';
+            else if (inc.type === 'acid_rain') color = '#84cc16';
+            else if (inc.type === 'satellite_fall') color = '#dc2626';
+
             return (
               <circle
                 key={inc.id}
                 cx={hx}
                 cy={hy}
                 r={inc.radius * 7}
-                fill="#ef4444"
+                fill={color}
                 fillOpacity="0.25"
-                stroke="#ef4444"
+                stroke={color}
                 strokeWidth="1.5"
                 strokeDasharray="4,4"
               />

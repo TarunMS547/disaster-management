@@ -5,7 +5,13 @@ import {
   Construction, 
   TrendingUp, 
   PowerOff, 
-  Wrench 
+  Wrench,
+  Waves,
+  Activity,
+  Mountain,
+  CloudLightning,
+  CloudRain,
+  Satellite
 } from 'lucide-react';
 import { useSimulation } from '../../context/SimulationContext';
 import { Incident } from '../../types/simulation';
@@ -18,13 +24,47 @@ interface EventTriggerDialogProps {
 export const EventTriggerDialog: React.FC<EventTriggerDialogProps> = ({ isOpen, onClose }) => {
   const { state, triggerUserIncident } = useSimulation();
 
-  const [eventType, setEventType] = useState<Incident['type']>('road_closure');
+  const [eventType, setEventType] = useState<Incident['type']>('flood_expansion');
   const [targetId, setTargetId] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
   // Update targetId default when eventType changes
   React.useEffect(() => {
-    if (eventType === 'road_closure' && state.roadEdges[0]) {
+    if (eventType === 'flood_expansion') {
+      if (state.roadEdges[0]) {
+        setTargetId(state.roadEdges[0].id);
+        setDescription('Flash flood surge inundating arterial corridors and bridge crossings');
+      }
+    } else if (eventType === 'earthquake') {
+      const fac = state.facilities.find(f => f.type === 'hospital') || state.facilities[0];
+      if (fac) {
+        setTargetId(fac.id);
+        setDescription(`Magnitude 7.2 Richter seismic epicenter near ${fac.name}`);
+      }
+    } else if (eventType === 'landslide') {
+      if (state.roadEdges[0]) {
+        setTargetId(state.roadEdges[0].id);
+        setDescription('Mountain slope destabilization and mudslide burying transit route');
+      }
+    } else if (eventType === 'weather_change') {
+      const fac = state.facilities.find(f => f.type === 'shelter') || state.facilities[0];
+      if (fac) {
+        setTargetId(fac.id);
+        setDescription('Severe blizzard & sub-zero gale storm reducing fleet speed and spiking heating demand');
+      }
+    } else if (eventType === 'acid_rain') {
+      const wh = state.facilities.find(f => f.type === 'warehouse') || state.facilities[0];
+      if (wh) {
+        setTargetId(wh.id);
+        setDescription(`Industrial chemical smog producing corrosive acid precipitation near ${wh.name}`);
+      }
+    } else if (eventType === 'satellite_fall') {
+      const fac = state.facilities[0];
+      if (fac) {
+        setTargetId(fac.id);
+        setDescription(`De-orbited defunct satellite kinetic crash and high-energy EMP shockwave`);
+      }
+    } else if (eventType === 'road_closure' && state.roadEdges[0]) {
       setTargetId(state.roadEdges[0].id);
       setDescription(`Manual incident: Road corridor toggle`);
     } else if (eventType === 'warehouse_outage') {
@@ -62,9 +102,22 @@ export const EventTriggerDialog: React.FC<EventTriggerDialogProps> = ({ isOpen, 
     onClose();
   };
 
+  const disasterOptions = [
+    { type: 'flood_expansion', label: 'Flash Flood', icon: Waves, color: 'text-sky-400', border: 'hover:border-sky-500' },
+    { type: 'earthquake', label: 'Earthquake', icon: Activity, color: 'text-orange-500', border: 'hover:border-orange-500' },
+    { type: 'landslide', label: 'Landslide', icon: Mountain, color: 'text-amber-600', border: 'hover:border-amber-600' },
+    { type: 'weather_change', label: 'Extreme Storm', icon: CloudLightning, color: 'text-purple-400', border: 'hover:border-purple-500' },
+    { type: 'acid_rain', label: 'Acid Rain', icon: CloudRain, color: 'text-lime-400', border: 'hover:border-lime-500' },
+    { type: 'satellite_fall', label: 'Satellite Crash', icon: Satellite, color: 'text-rose-500', border: 'hover:border-rose-500' },
+    { type: 'road_closure', label: 'Road Block', icon: Construction, color: 'text-yellow-400', border: 'hover:border-yellow-500' },
+    { type: 'warehouse_outage', label: 'Depot Outage', icon: PowerOff, color: 'text-amber-400', border: 'hover:border-amber-500' },
+    { type: 'demand_spike', label: 'Surge Influx', icon: TrendingUp, color: 'text-red-400', border: 'hover:border-red-500' },
+    { type: 'vehicle_breakdown', label: 'Fleet Failure', icon: Wrench, color: 'text-blue-400', border: 'hover:border-blue-500' },
+  ] as const;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-ares-surface border border-ares-border rounded-xl w-full max-w-md overflow-hidden shadow-2xl font-mono text-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+      <div className="bg-ares-surface border border-ares-border rounded-xl w-full max-w-lg overflow-hidden shadow-2xl font-mono text-xs max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-ares-border flex items-center justify-between bg-ares-card">
           <div className="flex items-center gap-2">
@@ -76,87 +129,59 @@ export const EventTriggerDialog: React.FC<EventTriggerDialogProps> = ({ isOpen, 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto">
           {/* Incident Type Selector */}
           <div>
-            <label className="text-ares-subtext uppercase text-[10px] block mb-1.5">Intervention Type</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setEventType('road_closure')}
-                className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-all ${
-                  eventType === 'road_closure'
-                    ? 'border-ares-accent bg-ares-accentMuted text-ares-text'
-                    : 'border-ares-border bg-ares-card text-ares-subtext hover:border-ares-muted'
-                }`}
-              >
-                <Construction className="w-4 h-4 text-ares-amber" />
-                <span>Road Closure</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setEventType('demand_spike')}
-                className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-all ${
-                  eventType === 'demand_spike'
-                    ? 'border-ares-accent bg-ares-accentMuted text-ares-text'
-                    : 'border-ares-border bg-ares-card text-ares-subtext hover:border-ares-muted'
-                }`}
-              >
-                <TrendingUp className="w-4 h-4 text-ares-critical" />
-                <span>Demand Surge</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setEventType('warehouse_outage')}
-                className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-all ${
-                  eventType === 'warehouse_outage'
-                    ? 'border-ares-accent bg-ares-accentMuted text-ares-text'
-                    : 'border-ares-border bg-ares-card text-ares-subtext hover:border-ares-muted'
-                }`}
-              >
-                <PowerOff className="w-4 h-4 text-ares-amber" />
-                <span>Depot Outage</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setEventType('vehicle_breakdown')}
-                className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-all ${
-                  eventType === 'vehicle_breakdown'
-                    ? 'border-ares-accent bg-ares-accentMuted text-ares-text'
-                    : 'border-ares-border bg-ares-card text-ares-subtext hover:border-ares-muted'
-                }`}
-              >
-                <Wrench className="w-4 h-4 text-ares-blue" />
-                <span>Vehicle Failure</span>
-              </button>
+            <label className="text-ares-subtext uppercase text-[10px] block mb-1.5 font-bold">Select Disaster / Hazard Type</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {disasterOptions.map((opt) => {
+                const IconComponent = opt.icon;
+                const isSelected = eventType === opt.type;
+                return (
+                  <button
+                    key={opt.type}
+                    type="button"
+                    onClick={() => setEventType(opt.type as Incident['type'])}
+                    className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-all ${
+                      isSelected
+                        ? 'border-ares-accent bg-ares-accentMuted text-ares-text shadow-sm'
+                        : `border-ares-border bg-ares-card text-ares-subtext ${opt.border}`
+                    }`}
+                  >
+                    <IconComponent className={`w-4 h-4 shrink-0 ${opt.color}`} />
+                    <span className="truncate font-semibold">{opt.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Target Entity Selector */}
           <div>
-            <label className="text-ares-subtext uppercase text-[10px] block mb-1.5">Target Entity</label>
+            <label className="text-ares-subtext uppercase text-[10px] block mb-1.5 font-bold">Target Zone / Epicenter Entity</label>
             <select
               value={targetId}
               onChange={(e) => setTargetId(e.target.value)}
               className="w-full bg-ares-card border border-ares-border rounded-lg p-2.5 text-ares-text focus:outline-none focus:border-ares-accent"
             >
-              {eventType === 'road_closure' && (
-                state.roadEdges.map(edge => (
-                  <option key={edge.id} value={edge.id}>
-                    {edge.id}: {edge.fromNode} ↔ {edge.toNode} ({edge.status.toUpperCase()})
-                  </option>
-                ))
+              {(eventType === 'road_closure' || eventType === 'landslide' || eventType === 'flood_expansion') && (
+                <optgroup label="Road Corridors & Highways">
+                  {state.roadEdges.map(edge => (
+                    <option key={edge.id} value={edge.id}>
+                      {edge.id}: {edge.fromNode} ↔ {edge.toNode} ({edge.status.toUpperCase()})
+                    </option>
+                  ))}
+                </optgroup>
               )}
 
-              {(eventType === 'demand_spike' || eventType === 'warehouse_outage') && (
-                state.facilities.map(fac => (
-                  <option key={fac.id} value={fac.id}>
-                    {fac.name} [{fac.type.toUpperCase()}] ({fac.operationalStatus.toUpperCase()})
-                  </option>
-                ))
+              {(eventType === 'earthquake' || eventType === 'satellite_fall' || eventType === 'acid_rain' || eventType === 'weather_change' || eventType === 'demand_spike' || eventType === 'warehouse_outage' || eventType === 'flood_expansion') && (
+                <optgroup label="Civilian & Critical Facilities">
+                  {state.facilities.map(fac => (
+                    <option key={fac.id} value={fac.id}>
+                      {fac.name} [{fac.type.toUpperCase()}] ({fac.operationalStatus.toUpperCase()})
+                    </option>
+                  ))}
+                </optgroup>
               )}
 
               {eventType === 'vehicle_breakdown' && (

@@ -473,7 +473,8 @@ export class SimulationEngine {
   }
 
   /**
-   * User Triggered Disaster Interventions (Section 10 of plan)
+   * User Triggered Disaster Interventions
+   * Supports: flood_expansion, earthquake, landslide, weather_change, acid_rain, satellite_fall, road_closure, demand_spike, warehouse_outage, vehicle_breakdown
    */
   public triggerUserIncident(params: {
     type: Incident['type'];
@@ -481,30 +482,164 @@ export class SimulationEngine {
     description: string;
   }): void {
     const tick = this.state.currentTick;
-    const incident: Incident = {
-      id: `user-inc-${tick}-${Math.random().toString(36).substring(2, 6)}`,
-      name: `User Action: ${params.type.replace('_', ' ').toUpperCase()}`,
-      type: params.type,
-      targetId: params.targetId,
-      position: [0, 0, 0],
-      radius: 8,
-      startTick: tick,
-      durationTicks: 40,
-      severity: 'severe',
-      resolved: false,
-      description: params.description,
-    };
+    let incidentPos: [number, number, number] = [0, 0, 0];
+    let incidentRadius = 8;
+    let severity: Incident['severity'] = 'severe';
+    let incidentName = `User Action: ${params.type.replace('_', ' ').toUpperCase()}`;
 
-    if (params.type === 'road_closure') {
+    // Compute center position and specific disruption effects based on disaster type
+    if (params.type === 'earthquake') {
+      incidentName = 'Seismic Event: Quake Rupture';
+      severity = 'catastrophic';
+      incidentRadius = 14;
+      const fac = this.state.facilities.find(f => f.id === params.targetId) || this.state.facilities[0];
+      if (fac) {
+        incidentPos = [...fac.position];
+        // Damage facility: reduce capacity, degrade operational status, destroy 30% unreserved inventory
+        fac.operationalStatus = 'degraded';
+        fac.capacity = Math.max(100, Math.floor(fac.capacity * 0.6));
+        for (const k of Object.keys(fac.inventory)) {
+          fac.inventory[k] = Math.floor(fac.inventory[k] * 0.75);
+        }
+        // Fracture adjacent roads within radius
+        for (const edge of this.state.roadEdges) {
+          const nodeFrom = this.state.roadNodes.find(n => n.id === edge.fromNode);
+          const nodeTo = this.state.roadNodes.find(n => n.id === edge.toNode);
+          if (nodeFrom && nodeTo) {
+            const d1 = Math.hypot(nodeFrom.position[0] - incidentPos[0], nodeFrom.position[2] - incidentPos[2]);
+            const d2 = Math.hypot(nodeTo.position[0] - incidentPos[0], nodeTo.position[2] - incidentPos[2]);
+            if (d1 < 16 || d2 < 16) {
+              edge.status = 'slow';
+              edge.hazardExposureCost = Math.max(edge.hazardExposureCost, 50);
+            }
+          }
+        }
+        this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+      }
+    } else if (params.type === 'landslide') {
+      incidentName = 'Mass Movement: Landslide Barrier';
+      severity = 'severe';
+      incidentRadius = 9;
+      // Target is a road edge
+      const edge = this.state.roadEdges.find(e => e.id === params.targetId) || this.state.roadEdges[0];
+      if (edge) {
+        edge.status = 'blocked';
+        edge.hazardExposureCost = 150;
+        const nodeFrom = this.state.roadNodes.find(n => n.id === edge.fromNode);
+        const nodeTo = this.state.roadNodes.find(n => n.id === edge.toNode);
+        if (nodeFrom && nodeTo) {
+          incidentPos = [
+            (nodeFrom.position[0] + nodeTo.position[0]) / 2,
+            0,
+            (nodeFrom.position[2] + nodeTo.position[2]) / 2,
+          ];
+        }
+        // Check if any vehicles currently traversing this edge, immobilize them
+        for (const veh of this.state.vehicles) {
+          if (veh.status === 'in_transit') {
+            const d = Math.hypot(veh.position[0] - incidentPos[0], veh.position[2] - incidentPos[2]);
+            if (d < 10) {
+              veh.status = 'disabled';
+            }
+          }
+        }
+        this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+      }
+    } else if (params.type === 'flood_expansion') {
+      incidentName = 'Hydrological Surge: Flash Flood Expansion';
+      severity = 'severe';
+      incidentRadius = 12;
+      const edge = this.state.roadEdges.find(e => e.id === params.targetId);
+      if (edge) {
+        edge.status = 'blocked';
+        edge.hazardExposureCost = 100;
+        const nodeFrom = this.state.roadNodes.find(n => n.id === edge.fromNode);
+        if (nodeFrom) incidentPos = [...nodeFrom.position];
+      } else {
+        const fac = this.state.facilities.find(f => f.id === params.targetId);
+        if (fac) incidentPos = [...fac.position];
+      }
+      this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+    } else if (params.type === 'weather_change') {
+      incidentName = 'Severe Weather: Blizzard & Gale Storm';
+      severity = 'moderate';
+      incidentRadius = 22;
+      // Affects entire quadrant or selected facility zone
+      const fac = this.state.facilities.find(f => f.id === params.targetId) || this.state.facilities[0];
+      if (fac) incidentPos = [...fac.position];
+      // Slow down road speeds across network
+      for (const edge of this.state.roadEdges) {
+        if (edge.status === 'open') {
+          edge.status = 'slow';
+          edge.hazardExposureCost = Math.max(edge.hazardExposureCost, 25);
+        }
+      }
+      // Quadruple blanket & fuel burn rates at shelters
+      for (const f of this.state.facilities) {
+        if (f.type === 'shelter') {
+          if (f.consumptionRates['blankets']) f.consumptionRates['blankets'] = Math.ceil(f.consumptionRates['blankets'] * 2.5);
+          if (f.consumptionRates['fuel']) f.consumptionRates['fuel'] = Math.ceil(f.consumptionRates['fuel'] * 2);
+        }
+      }
+      this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+    } else if (params.type === 'acid_rain') {
+      incidentName = 'Atmospheric Hazard: Corrosive Acid Rain';
+      severity = 'severe';
+      incidentRadius = 15;
+      const fac = this.state.facilities.find(f => f.id === params.targetId) || this.state.facilities[0];
+      if (fac) {
+        incidentPos = [...fac.position];
+        // Corrode unsealed rations & medical stock
+        for (const f of this.state.facilities) {
+          const dist = Math.hypot(f.position[0] - incidentPos[0], f.position[2] - incidentPos[2]);
+          if (dist <= 18) {
+            f.operationalStatus = 'degraded';
+            if (f.inventory['water']) f.inventory['water'] = Math.floor(f.inventory['water'] * 0.7);
+            if (f.inventory['food']) f.inventory['food'] = Math.floor(f.inventory['food'] * 0.7);
+          }
+        }
+      }
+    } else if (params.type === 'satellite_fall') {
+      incidentName = 'Orbital Debris: Kinetic Satellite Impact';
+      severity = 'catastrophic';
+      incidentRadius = 11;
+      // Strike target facility or node
+      const fac = this.state.facilities.find(f => f.id === params.targetId);
+      const edge = this.state.roadEdges.find(e => e.id === params.targetId);
+      if (fac) {
+        incidentPos = [...fac.position];
+        fac.operationalStatus = 'offline';
+        fac.capacity = Math.floor(fac.capacity * 0.2);
+        for (const k of Object.keys(fac.inventory)) {
+          fac.inventory[k] = Math.floor(fac.inventory[k] * 0.2);
+        }
+      } else if (edge) {
+        edge.status = 'blocked';
+        edge.hazardExposureCost = 300;
+        const node = this.state.roadNodes.find(n => n.id === edge.fromNode);
+        if (node) incidentPos = [...node.position];
+      }
+      // EMP shockwave disables electronics in radius
+      for (const veh of this.state.vehicles) {
+        const d = Math.hypot(veh.position[0] - incidentPos[0], veh.position[2] - incidentPos[2]);
+        if (d <= 14) {
+          veh.status = 'disabled';
+        }
+      }
+      this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+    } else if (params.type === 'road_closure') {
       const edge = this.state.roadEdges.find(e => e.id === params.targetId);
       if (edge) {
         edge.status = edge.status === 'blocked' ? 'open' : 'blocked';
+        const nodeFrom = this.state.roadNodes.find(n => n.id === edge.fromNode);
+        if (nodeFrom) incidentPos = [...nodeFrom.position];
         this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
       }
     } else if (params.type === 'warehouse_outage') {
       const fac = this.state.facilities.find(f => f.id === params.targetId);
       if (fac) {
         fac.operationalStatus = fac.operationalStatus === 'offline' ? 'operational' : 'offline';
+        incidentPos = [...fac.position];
       }
     } else if (params.type === 'demand_spike') {
       const fac = this.state.facilities.find(f => f.id === params.targetId);
@@ -513,13 +648,29 @@ export class SimulationEngine {
         for (const k of Object.keys(fac.consumptionRates)) {
           fac.consumptionRates[k] = Math.ceil(fac.consumptionRates[k] * 2);
         }
+        incidentPos = [...fac.position];
       }
     } else if (params.type === 'vehicle_breakdown') {
       const veh = this.state.vehicles.find(v => v.id === params.targetId);
       if (veh) {
         veh.status = veh.status === 'disabled' ? 'idle' : 'disabled';
+        incidentPos = [...veh.position];
       }
     }
+
+    const incident: Incident = {
+      id: `user-inc-${tick}-${Math.random().toString(36).substring(2, 6)}`,
+      name: incidentName,
+      type: params.type,
+      targetId: params.targetId,
+      position: incidentPos,
+      radius: incidentRadius,
+      startTick: tick,
+      durationTicks: 50,
+      severity,
+      resolved: false,
+      description: params.description,
+    };
 
     this.state.incidents.push(incident);
 
@@ -528,8 +679,8 @@ export class SimulationEngine {
       simulationId: this.state.id,
       tick,
       eventType: 'user_event_injected',
-      severity: 'warning',
-      title: `User Incident Triggered: ${incident.name}`,
+      severity: incident.severity === 'catastrophic' || incident.severity === 'severe' ? 'critical' : 'warning',
+      title: `Disaster Deployed: ${incident.name}`,
       message: params.description,
       timestamp: new Date().toISOString(),
     });
