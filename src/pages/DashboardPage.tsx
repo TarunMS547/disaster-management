@@ -17,6 +17,7 @@ import { SEEDED_SCENARIOS } from '../simulation/scenarios';
 import { StorageService, SavedSimulationSummary } from '../services/storage';
 import { useARESAuth } from '../context/AuthContext';
 import { ScenarioDefinition } from '../types/simulation';
+import { VariableGraph } from '../components/analytics/VariableGraph';
 
 export const DashboardPage: React.FC = () => {
   const { switchScenario, state } = useSimulation();
@@ -136,6 +137,24 @@ export const DashboardPage: React.FC = () => {
             );
           })}
         </div>
+      </div>
+
+      {/* Real-Time Variable Telemetry Graph */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-mono font-bold text-black uppercase tracking-wider flex items-center gap-2">
+            <Activity className="w-4 h-4 text-ares-accent" />
+            <span>Active Simulation Telemetry & Variable Projections</span>
+          </h2>
+          <span className="text-xs text-black font-mono font-bold">
+            SCENARIO: {state.scenarioKey.toUpperCase()} • TICK {state.currentTick}
+          </span>
+        </div>
+        <VariableGraph
+          metricsHistory={state.metricsHistory}
+          currentTick={state.currentTick}
+          height={300}
+        />
       </div>
 
       {/* Recent Simulation Runs */}

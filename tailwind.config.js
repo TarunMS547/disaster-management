@@ -20,9 +20,9 @@ export default {
           amber: '#d97706',
           critical: '#e11d48',
           success: '#059669',
-          muted: '#64748b',
-          text: '#0f172a',
-          subtext: '#475569'
+          muted: '#1f2937',
+          text: '#000000',
+          subtext: '#111827'
         }
       },
       fontSize: {

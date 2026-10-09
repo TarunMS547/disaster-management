@@ -1,8 +1,6 @@
 import React from 'react';
 import { useSimulation } from '../context/SimulationContext';
 import { 
-  LineChart, 
-  Line, 
   BarChart, 
   Bar, 
   XAxis, 
@@ -22,19 +20,11 @@ import {
   Play, 
   Layers 
 } from 'lucide-react';
+import { VariableGraph } from '../components/analytics/VariableGraph';
 
 export const AnalyticsPage: React.FC = () => {
   const { state, comparison, runBaselineComparison } = useSimulation();
   const m = state.metrics;
-
-  // Transform history data for Recharts
-  const historyData = state.metricsHistory.map((h, i) => ({
-    tick: h.tick,
-    criticalDemand: h.criticalDemandFulfilledPercent,
-    unmetDemand: h.totalUnmetDemand,
-    fairness: Math.round(h.fairnessIndex * 100),
-    activeDeliveries: h.deliveriesActive,
-  }));
 
   // Resource unmet demand chart data
   const unmetByResourceData = Object.entries(m.unmetDemandByResource).map(([resId, qty]) => ({
@@ -180,46 +170,56 @@ export const AnalyticsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Historical Performance Over Ticks Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="p-5 rounded-xl bg-ares-surface border border-ares-border space-y-4">
-          <h3 className="font-bold uppercase text-ares-text text-sm">
-            Critical Demand Fulfillment (%) Over Ticks
-          </h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={historyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="tick" stroke="#64748b" label={{ value: 'Tick', position: 'insideBottom', offset: -5 }} />
-                <YAxis stroke="#64748b" domain={[0, 100]} />
-                <Tooltip contentStyle={{ backgroundColor: '#0d131f', borderColor: '#1e293b' }} />
-                <Line type="monotone" dataKey="criticalDemand" stroke="#00e5ff" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+      {/* Comprehensive Variable Telemetry Graph */}
+      <VariableGraph
+        metricsHistory={state.metricsHistory}
+        currentTick={state.currentTick}
+        height={380}
+      />
 
-        <div className="p-5 rounded-xl bg-ares-surface border border-ares-border space-y-4">
-          <h3 className="font-bold uppercase text-ares-text text-sm">
-            Unmet Deficit by Resource Category
-          </h3>
-          <div className="h-64">
-            {unmetByResourceData.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-ares-muted">
-                No active unmet resource deficits in this simulation horizon.
-              </div>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={unmetByResourceData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="resource" stroke="#64748b" />
-                  <YAxis stroke="#64748b" />
-                  <Tooltip contentStyle={{ backgroundColor: '#0d131f', borderColor: '#1e293b' }} />
-                  <Bar dataKey="quantity" fill="#f43f5e" />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </div>
+      {/* Secondary Resource Deficit Distribution Breakdown */}
+      <div className="p-5 rounded-xl bg-ares-surface border border-ares-border space-y-4">
+        <h3 className="font-bold uppercase text-black text-sm font-mono flex items-center justify-between">
+          <span>Unmet Resource Deficit Distribution by Category</span>
+          <span className="text-xs text-black/70">Authoritative Real-Time Inventory Gaps</span>
+        </h3>
+        <div className="h-64">
+          {unmetByResourceData.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-black font-semibold">
+              No active unmet resource deficits in this simulation horizon. All allocations optimal.
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={unmetByResourceData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="resource" 
+                  stroke="#000000" 
+                  tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                />
+                <YAxis 
+                  stroke="#000000" 
+                  tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#ffffff', 
+                    borderColor: '#000000', 
+                    borderWidth: '1.5px',
+                    borderRadius: '8px',
+                    color: '#000000',
+                    fontFamily: 'ui-monospace, monospace',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)'
+                  }} 
+                  itemStyle={{ color: '#000000' }}
+                  labelStyle={{ color: '#000000', fontWeight: 'bold' }}
+                />
+                <Bar dataKey="quantity" fill="#e11d48" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
     </div>
