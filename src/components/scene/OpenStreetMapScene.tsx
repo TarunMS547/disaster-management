@@ -46,7 +46,7 @@ export const OpenStreetMapScene: React.FC = () => {
   const routesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const hazardsLayerGroupRef = useRef<L.LayerGroup | null>(null);
 
-  const [activeProvider, setActiveProvider] = useState<TileProvider>('light');
+  const [activeProvider, setActiveProvider] = useState<TileProvider>('dark');
 
   // 1. Initialize Leaflet Map
   useEffect(() => {

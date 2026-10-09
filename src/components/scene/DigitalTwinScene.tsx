@@ -15,7 +15,7 @@ import { Eye, Camera, Compass, Maximize2 } from 'lucide-react';
 export const DigitalTwinScene: React.FC = () => {
   const { state, selectedEntity, selectEntity } = useSimulation();
   const controlsRef = useRef<OrbitControlsImpl>(null);
-  const [isLightMode, setIsLightMode] = useState(true);
+  const [isLightMode, setIsLightMode] = useState(false);
 
   // Active deliveries
   const activeDeliveries = state.deliveries.filter(
