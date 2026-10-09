@@ -28,6 +28,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTriggerDialog }) => {
     step, 
     reset, 
     setSpeed, 
+    switchScenario,
     viewMode, 
     setViewMode, 
     saveCurrentRun 
@@ -61,8 +62,23 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTriggerDialog }) => {
                 OPS v2.0
               </span>
             </div>
-            <div className="text-xs text-ares-subtext font-mono truncate max-w-xs">
-              {state.name}
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <select
+                value={state.scenarioKey}
+                onChange={(e) => switchScenario(e.target.value as any)}
+                className="bg-ares-card border border-ares-border rounded px-2 py-0.5 text-[11px] font-mono text-ares-accent font-semibold focus:outline-none focus:border-ares-accent cursor-pointer hover:border-ares-accent/50"
+                title="Select Disaster Simulation Scenario"
+              >
+                <option value="urban_flood">🌊 Flood Expansion</option>
+                <option value="earthquake_catastrophe">💥 Magnitude 7.8 Earthquake</option>
+                <option value="landslide_avalanche">⛰️ Mountain Landslide</option>
+                <option value="extreme_weather_blizzard">❄️ Blizzard & Gale Storm</option>
+                <option value="acid_rain_fallout">🧪 Chemical Acid Rain</option>
+                <option value="satellite_kinetic_impact">🛰️ Satellite Kinetic Impact</option>
+                <option value="compound_apocalypse">🔥 Compound Mega-Disaster</option>
+                <option value="hospital_shortage">🏥 Hospital Critical Shortage</option>
+                <option value="compound_disruption">⚡ Multi-Hub Disruption</option>
+              </select>
             </div>
           </div>
         </div>

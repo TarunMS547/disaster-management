@@ -526,8 +526,306 @@ export function getCompoundDisruptionScenario(): ScenarioDefinition {
   };
 }
 
+// SCENARIO D: Earthquake Catastrophe
+export function getEarthquakeScenario(): ScenarioDefinition {
+  const { nodes, edges } = generateBaseCityTopology();
+  const base = getUrbanFloodScenario();
+
+  return {
+    id: 'scen-04',
+    key: 'earthquake_catastrophe',
+    name: 'Scenario D: Magnitude 7.8 Richter Earthquake',
+    description: 'Massive tectonic rupture fractures central city foundations, partially collapses hospitals, fractures key arterial roads into crawl speeds, and creates critical medical trauma surges.',
+    initialSeed: 55432,
+    tickIntervalMs: 1200,
+    maxTicks: 150,
+    facilities: base.facilities,
+    roadNodes: nodes,
+    roadEdges: edges,
+    vehicles: createVehicles(),
+    resources: STANDARD_RESOURCES,
+    eventSchedule: [
+      {
+        tick: 2,
+        incident: {
+          name: 'Epicenter Rupture - Southwest Basin',
+          type: 'earthquake',
+          targetId: 'fac-hosp-metro',
+          position: [-25, 0, 25],
+          radius: 16,
+          startTick: 2,
+          durationTicks: 60,
+          severity: 'catastrophic',
+          description: 'Magnitude 7.8 seismic strike severely damages St. Jude General Hospital and cracks regional asphalt bridges.',
+        },
+      },
+      {
+        tick: 8,
+        incident: {
+          name: 'Critical Trauma Mass Influx',
+          type: 'demand_spike',
+          targetId: 'fac-hosp-metro',
+          position: [-25, 0, 25],
+          radius: 6,
+          startTick: 8,
+          durationTicks: 45,
+          severity: 'severe',
+          description: 'Hundreds of injured citizens overwhelm hospital ER. Oxygen and critical medicine consumption triples.',
+        },
+      },
+    ],
+  };
+}
+
+// SCENARIO E: Landslide Avalanche
+export function getLandslideScenario(): ScenarioDefinition {
+  const { nodes, edges } = generateBaseCityTopology();
+  const base = getUrbanFloodScenario();
+
+  return {
+    id: 'scen-05',
+    key: 'landslide_avalanche',
+    name: 'Scenario E: Mountainous Landslide & Mud Avalanche',
+    description: 'Torrential hillside destabilization sends thousands of tons of mud and boulders down on main logistics arteries, burying trucks and cutting off industrial warehouses.',
+    initialSeed: 33219,
+    tickIntervalMs: 1200,
+    maxTicks: 150,
+    facilities: base.facilities,
+    roadNodes: nodes,
+    roadEdges: edges,
+    vehicles: createVehicles(),
+    resources: STANDARD_RESOURCES,
+    eventSchedule: [
+      {
+        tick: 3,
+        incident: {
+          name: 'Massive Hillside Slump Barrier',
+          type: 'landslide',
+          targetId: 'edge-cw-cc',
+          position: [-12, 0, 0],
+          radius: 10,
+          startTick: 3,
+          durationTicks: 55,
+          severity: 'severe',
+          description: 'High velocity mudflow smothers the West Industrial Park connector. Ground logistics disabled along this axis.',
+        },
+      },
+      {
+        tick: 9,
+        incident: {
+          name: 'Secondary Slope Failure',
+          type: 'landslide',
+          targetId: 'edge-nw-cw',
+          position: [-25, 0, -12],
+          radius: 9,
+          startTick: 9,
+          durationTicks: 50,
+          severity: 'severe',
+          description: 'Secondary rockfall isolates the Northwest distribution corridor.',
+        },
+      },
+    ],
+  };
+}
+
+// SCENARIO F: Extreme Weather Blizzard
+export function getWeatherBlizzardScenario(): ScenarioDefinition {
+  const { nodes, edges } = generateBaseCityTopology();
+  const base = getUrbanFloodScenario();
+
+  return {
+    id: 'scen-06',
+    key: 'extreme_weather_blizzard',
+    name: 'Scenario F: Arctic Freeze & Severe Gale Blizzard',
+    description: 'Sub-zero temperatures and 80mph blizzard winds sweep the metro grid. Road speeds drop dramatically while thermal blanket and heating fuel burn rates escalate.',
+    initialSeed: 88712,
+    tickIntervalMs: 1200,
+    maxTicks: 150,
+    facilities: base.facilities,
+    roadNodes: nodes,
+    roadEdges: edges,
+    vehicles: createVehicles(),
+    resources: STANDARD_RESOURCES,
+    eventSchedule: [
+      {
+        tick: 2,
+        incident: {
+          name: 'Sub-Zero Polar Vortex Strike',
+          type: 'weather_change',
+          targetId: 'fac-shelter-east',
+          position: [0, 0, 0],
+          radius: 25,
+          startTick: 2,
+          durationTicks: 65,
+          severity: 'severe',
+          description: 'City-wide arctic tempest reduces vehicle traction and quadruples blanket demand at all civilian shelters.',
+        },
+      },
+    ],
+  };
+}
+
+// SCENARIO G: Acid Rain Fallout
+export function getAcidRainScenario(): ScenarioDefinition {
+  const { nodes, edges } = generateBaseCityTopology();
+  const base = getUrbanFloodScenario();
+
+  return {
+    id: 'scen-07',
+    key: 'acid_rain_fallout',
+    name: 'Scenario G: Toxic Chemical Acid Rain Fallout',
+    description: 'Industrial chemical refinery disaster releases corrosive nitric and sulfuric aerosol clouds, showering toxic rain that ruins water reservoirs and corrodes open storehouses.',
+    initialSeed: 91144,
+    tickIntervalMs: 1200,
+    maxTicks: 150,
+    facilities: base.facilities,
+    roadNodes: nodes,
+    roadEdges: edges,
+    vehicles: createVehicles(),
+    resources: STANDARD_RESOURCES,
+    eventSchedule: [
+      {
+        tick: 3,
+        incident: {
+          name: 'Corrosive Vapor Plume & Acid Downpour',
+          type: 'acid_rain',
+          targetId: 'fac-wh-central',
+          position: [0, 0, -25],
+          radius: 18,
+          startTick: 3,
+          durationTicks: 55,
+          severity: 'severe',
+          description: 'Acidic fallout degrades open warehouse stockpiles, contaminating potable water supplies across the northern sectors.',
+        },
+      },
+    ],
+  };
+}
+
+// SCENARIO H: Satellite Kinetic Impact
+export function getSatelliteFallScenario(): ScenarioDefinition {
+  const { nodes, edges } = generateBaseCityTopology();
+  const base = getUrbanFloodScenario();
+
+  return {
+    id: 'scen-08',
+    key: 'satellite_kinetic_impact',
+    name: 'Scenario H: Orbital Satellite De-Orbit & EMP Blast',
+    description: 'A 6-ton defunct military reconnaissance satellite crashes into the urban core, creating a smoking crater and radiating a high-frequency EMP burst that disables nearby autonomous vehicles.',
+    initialSeed: 77205,
+    tickIntervalMs: 1200,
+    maxTicks: 150,
+    facilities: base.facilities,
+    roadNodes: nodes,
+    roadEdges: edges,
+    vehicles: createVehicles(),
+    resources: STANDARD_RESOURCES,
+    eventSchedule: [
+      {
+        tick: 4,
+        incident: {
+          name: 'Orbital Kinetic Crater & EMP Burst',
+          type: 'satellite_fall',
+          targetId: 'edge-cc-ce',
+          position: [12, 0, 0],
+          radius: 12,
+          startTick: 4,
+          durationTicks: 60,
+          severity: 'catastrophic',
+          description: 'Orbital wreckage incinerates East Commercial bridge node. EMP shockwave fries guidance systems of in-transit vehicles.',
+        },
+      },
+    ],
+  };
+}
+
+// SCENARIO I: Compound Mega Apocalypse
+export function getCompoundApocalypseScenario(): ScenarioDefinition {
+  const { nodes, edges } = generateBaseCityTopology();
+  const base = getUrbanFloodScenario();
+
+  return {
+    id: 'scen-09',
+    key: 'compound_apocalypse',
+    name: 'Scenario I: Simultaneous Multi-Disaster Cataclysm',
+    description: 'Simultaneous compounding mega-disaster: River flood surge, magnitude 7 earthquake, mountain landslide, and orbital crash ignite simultaneous emergency calls.',
+    initialSeed: 99999,
+    tickIntervalMs: 1200,
+    maxTicks: 150,
+    facilities: base.facilities,
+    roadNodes: nodes,
+    roadEdges: edges,
+    vehicles: createVehicles(),
+    resources: STANDARD_RESOURCES,
+    eventSchedule: [
+      {
+        tick: 2,
+        incident: {
+          name: 'Flash River Flooding',
+          type: 'flood_expansion',
+          targetId: 'edge-cc-sc',
+          position: [0, 0, 15],
+          radius: 12,
+          startTick: 2,
+          durationTicks: 50,
+          severity: 'severe',
+          description: 'Southern river breach inundates primary crossing.',
+        },
+      },
+      {
+        tick: 5,
+        incident: {
+          name: 'Seismic Shockwave',
+          type: 'earthquake',
+          targetId: 'fac-hosp-metro',
+          position: [-25, 0, 25],
+          radius: 14,
+          startTick: 5,
+          durationTicks: 60,
+          severity: 'catastrophic',
+          description: 'Earthquake damages hospital infrastructure.',
+        },
+      },
+      {
+        tick: 9,
+        incident: {
+          name: 'Mountain Landslide Barrier',
+          type: 'landslide',
+          targetId: 'edge-nw-cw',
+          position: [-25, 0, -12],
+          radius: 10,
+          startTick: 9,
+          durationTicks: 45,
+          severity: 'severe',
+          description: 'Mudflow shuts down Western logistics depot.',
+        },
+      },
+      {
+        tick: 14,
+        incident: {
+          name: 'Satellite Kinetic Impact',
+          type: 'satellite_fall',
+          targetId: 'edge-cc-ce',
+          position: [12, 0, 0],
+          radius: 12,
+          startTick: 14,
+          durationTicks: 50,
+          severity: 'catastrophic',
+          description: 'Satellite crater burns East corridor with EMP wave.',
+        },
+      },
+    ],
+  };
+}
+
 export const SEEDED_SCENARIOS: Record<ScenarioDefinition['key'], ScenarioDefinition> = {
   urban_flood: getUrbanFloodScenario(),
   hospital_shortage: getHospitalShortageScenario(),
   compound_disruption: getCompoundDisruptionScenario(),
+  earthquake_catastrophe: getEarthquakeScenario(),
+  landslide_avalanche: getLandslideScenario(),
+  extreme_weather_blizzard: getWeatherBlizzardScenario(),
+  acid_rain_fallout: getAcidRainScenario(),
+  satellite_kinetic_impact: getSatelliteFallScenario(),
+  compound_apocalypse: getCompoundApocalypseScenario(),
 };

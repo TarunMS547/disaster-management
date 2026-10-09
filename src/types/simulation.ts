@@ -205,7 +205,16 @@ export interface SimulationMetrics {
 
 export interface ScenarioDefinition {
   id: string;
-  key: 'urban_flood' | 'hospital_shortage' | 'compound_disruption';
+  key: 
+    | 'urban_flood' 
+    | 'hospital_shortage' 
+    | 'compound_disruption'
+    | 'earthquake_catastrophe'
+    | 'landslide_avalanche'
+    | 'extreme_weather_blizzard'
+    | 'acid_rain_fallout'
+    | 'satellite_kinetic_impact'
+    | 'compound_apocalypse';
   name: string;
   description: string;
   initialSeed: number;

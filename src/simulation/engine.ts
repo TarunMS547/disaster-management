@@ -444,6 +444,64 @@ export class SimulationEngine {
           edge.hazardExposureCost = 100;
           this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
         }
+      } else if (incident.type === 'earthquake') {
+        const fac = this.state.facilities.find(f => f.id === incident.targetId) || this.state.facilities[0];
+        if (fac) {
+          fac.operationalStatus = 'degraded';
+          fac.capacity = Math.max(100, Math.floor(fac.capacity * 0.6));
+          for (const k of Object.keys(fac.inventory)) {
+            fac.inventory[k] = Math.floor(fac.inventory[k] * 0.75);
+          }
+        }
+        for (const edge of this.state.roadEdges) {
+          edge.status = 'slow';
+          edge.hazardExposureCost = 50;
+        }
+        this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+      } else if (incident.type === 'landslide') {
+        const edge = this.state.roadEdges.find(e => e.id === incident.targetId);
+        if (edge) {
+          edge.status = 'blocked';
+          edge.hazardExposureCost = 150;
+          this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+        }
+      } else if (incident.type === 'weather_change') {
+        for (const edge of this.state.roadEdges) {
+          if (edge.status === 'open') {
+            edge.status = 'slow';
+            edge.hazardExposureCost = 30;
+          }
+        }
+        for (const f of this.state.facilities) {
+          if (f.type === 'shelter') {
+            if (f.consumptionRates['blankets']) f.consumptionRates['blankets'] = Math.ceil(f.consumptionRates['blankets'] * 2.5);
+            if (f.consumptionRates['fuel']) f.consumptionRates['fuel'] = Math.ceil(f.consumptionRates['fuel'] * 2);
+          }
+        }
+        this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+      } else if (incident.type === 'acid_rain') {
+        for (const f of this.state.facilities) {
+          f.operationalStatus = 'degraded';
+          if (f.inventory['water']) f.inventory['water'] = Math.floor(f.inventory['water'] * 0.7);
+          if (f.inventory['food']) f.inventory['food'] = Math.floor(f.inventory['food'] * 0.7);
+        }
+      } else if (incident.type === 'satellite_fall') {
+        const fac = this.state.facilities.find(f => f.id === incident.targetId);
+        if (fac) {
+          fac.operationalStatus = 'offline';
+          fac.capacity = Math.floor(fac.capacity * 0.2);
+          for (const k of Object.keys(fac.inventory)) {
+            fac.inventory[k] = Math.floor(fac.inventory[k] * 0.2);
+          }
+        }
+        const edge = this.state.roadEdges.find(e => e.id === incident.targetId);
+        if (edge) {
+          edge.status = 'blocked';
+          edge.hazardExposureCost = 300;
+          this.graph.updateGraph(this.state.roadNodes, this.state.roadEdges);
+        }
+        // EMP disables first vehicle in proximity
+        if (this.state.vehicles[0]) this.state.vehicles[0].status = 'disabled';
       } else if (incident.type === 'warehouse_outage') {
         const fac = this.state.facilities.find(f => f.id === incident.targetId);
         if (fac) {

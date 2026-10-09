@@ -11,7 +11,7 @@ import {
 import { useSimulation } from '../../context/SimulationContext';
 
 export const IncidentPanel: React.FC = () => {
-  const { state, selectEntity } = useSimulation();
+  const { state, selectEntity, triggerUserIncident } = useSimulation();
 
   // Aggregate stats
   const totalPopulationAtRisk = state.facilities.reduce((sum, f) => sum + f.population, 0);
@@ -59,11 +59,99 @@ export const IncidentPanel: React.FC = () => {
           </div>
         </div>
 
+        {/* Quick Launch Disaster Simulation Buttons */}
+        <div className="space-y-1.5 p-3 rounded-xl bg-ares-card/60 border border-ares-border">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-ares-subtext font-bold">
+              ⚡ Quick Deploy Disasters
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            <button
+              onClick={() => triggerUserIncident({
+                type: 'flood_expansion',
+                targetId: state.roadEdges[0]?.id || '',
+                description: 'Flash river overflow inundating central artery'
+              })}
+              className="p-1.5 rounded-lg bg-sky-950/40 hover:bg-sky-900/60 border border-sky-500/40 text-sky-400 text-[10px] font-mono font-bold flex flex-col items-center gap-1 transition-all hover:scale-105 active:scale-95"
+              title="Deploy Flood Surge"
+            >
+              <span className="text-sm">🌊</span>
+              <span>Flood</span>
+            </button>
+
+            <button
+              onClick={() => triggerUserIncident({
+                type: 'earthquake',
+                targetId: state.facilities[0]?.id || '',
+                description: 'Magnitude 7.8 Richter earthquake rupture'
+              })}
+              className="p-1.5 rounded-lg bg-orange-950/40 hover:bg-orange-900/60 border border-orange-500/40 text-orange-400 text-[10px] font-mono font-bold flex flex-col items-center gap-1 transition-all hover:scale-105 active:scale-95"
+              title="Deploy Seismic Earthquake"
+            >
+              <span className="text-sm">💥</span>
+              <span>Quake</span>
+            </button>
+
+            <button
+              onClick={() => triggerUserIncident({
+                type: 'landslide',
+                targetId: state.roadEdges[1]?.id || state.roadEdges[0]?.id || '',
+                description: 'Mountain mudslide blocking transit corridors'
+              })}
+              className="p-1.5 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 border border-amber-600/40 text-amber-400 text-[10px] font-mono font-bold flex flex-col items-center gap-1 transition-all hover:scale-105 active:scale-95"
+              title="Deploy Mountain Landslide"
+            >
+              <span className="text-sm">⛰️</span>
+              <span>Slide</span>
+            </button>
+
+            <button
+              onClick={() => triggerUserIncident({
+                type: 'weather_change',
+                targetId: state.facilities[1]?.id || state.facilities[0]?.id || '',
+                description: 'Arctic gale blizzard slowing fleet speed'
+              })}
+              className="p-1.5 rounded-lg bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/40 text-purple-400 text-[10px] font-mono font-bold flex flex-col items-center gap-1 transition-all hover:scale-105 active:scale-95"
+              title="Deploy Severe Storm"
+            >
+              <span className="text-sm">❄️</span>
+              <span>Storm</span>
+            </button>
+
+            <button
+              onClick={() => triggerUserIncident({
+                type: 'acid_rain',
+                targetId: state.facilities[2]?.id || state.facilities[0]?.id || '',
+                description: 'Corrosive chemical acid downpour'
+              })}
+              className="p-1.5 rounded-lg bg-lime-950/40 hover:bg-lime-900/60 border border-lime-500/40 text-lime-400 text-[10px] font-mono font-bold flex flex-col items-center gap-1 transition-all hover:scale-105 active:scale-95"
+              title="Deploy Acid Rain"
+            >
+              <span className="text-sm">🧪</span>
+              <span>Acid Rain</span>
+            </button>
+
+            <button
+              onClick={() => triggerUserIncident({
+                type: 'satellite_fall',
+                targetId: state.facilities[0]?.id || '',
+                description: 'Orbital satellite kinetic impact & EMP burst'
+              })}
+              className="p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/40 text-rose-400 text-[10px] font-mono font-bold flex flex-col items-center gap-1 transition-all hover:scale-105 active:scale-95"
+              title="Deploy Satellite Impact"
+            >
+              <span className="text-sm">🛰️</span>
+              <span>Satellite</span>
+            </button>
+          </div>
+        </div>
+
         {/* Active Disaster Incidents */}
         <div className="space-y-2">
           <div className="text-[11px] font-mono uppercase tracking-wider text-ares-subtext font-semibold flex items-center gap-1.5">
             <Flame className="w-3.5 h-3.5 text-ares-amber" />
-            <span>Active Incidents</span>
+            <span>Active Incidents ({activeIncidents.length})</span>
           </div>
 
           {activeIncidents.length === 0 ? (
