@@ -22,20 +22,20 @@ export const Fallback2DMap: React.FC = () => {
   }, [state.roadNodes]);
 
   return (
-    <div className="w-full h-full flex flex-col md:flex-row bg-ares-bg text-ares-text overflow-hidden">
+    <div className="w-full h-full flex flex-col md:flex-row bg-slate-50 text-slate-800 overflow-hidden">
       {/* 2D SVG Schematic Canvas */}
-      <div className="flex-1 relative border-r border-ares-border flex items-center justify-center p-4">
-        <svg viewBox="0 0 600 600" className="w-full h-full max-h-[700px] bg-ares-surface rounded-xl border border-ares-border/80 shadow-2xl">
+      <div className="flex-1 relative border-r border-slate-200 flex items-center justify-center p-4">
+        <svg viewBox="0 0 600 600" className="w-full h-full max-h-[700px] bg-white rounded-xl border border-slate-300 shadow-xl">
           {/* Cyber Grid background */}
           <defs>
             <pattern id="grid2d" width="30" height="30" patternUnits="userSpaceOnUse">
-              <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+              <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
             </pattern>
           </defs>
           <rect width="600" height="600" fill="url(#grid2d)" />
 
           {/* Synthetic River */}
-          <rect x="0" y="380" width="600" height="70" fill="#0369a1" opacity="0.4" />
+          <rect x="0" y="380" width="600" height="70" fill="#38bdf8" opacity="0.35" />
 
           {/* Road Network Lines */}
           {state.roadEdges.map(edge => {

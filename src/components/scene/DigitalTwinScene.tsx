@@ -15,6 +15,7 @@ import { Eye, Camera, Compass, Maximize2 } from 'lucide-react';
 export const DigitalTwinScene: React.FC = () => {
   const { state, selectedEntity, selectEntity } = useSimulation();
   const controlsRef = useRef<OrbitControlsImpl>(null);
+  const [isLightMode, setIsLightMode] = useState(true);
 
   // Active deliveries
   const activeDeliveries = state.deliveries.filter(
@@ -53,7 +54,7 @@ export const DigitalTwinScene: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full relative select-none bg-ares-bg">
+    <div className={`w-full h-full relative select-none ${isLightMode ? 'bg-slate-100' : 'bg-ares-bg'}`}>
       {/* 3D WebGL Canvas */}
       <Canvas
         shadows
@@ -61,14 +62,14 @@ export const DigitalTwinScene: React.FC = () => {
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         onPointerMissed={() => selectEntity(null, null)}
       >
-        <color attach="background" args={['#070a11']} />
-        <fog attach="fog" args={['#070a11', 45, 160]} />
+        <color attach="background" args={[isLightMode ? '#e2e8f0' : '#070a11']} />
+        <fog attach="fog" args={[isLightMode ? '#cbd5e1' : '#070a11', isLightMode ? 55 : 45, isLightMode ? 175 : 160]} />
 
-        {/* Dynamic Dramatic Cinematic Cyberpunk Lighting */}
-        <ambientLight intensity={0.5} />
+        {/* Dynamic Dramatic Cinematic Daylight or Cyberpunk Lighting */}
+        <ambientLight intensity={isLightMode ? 0.95 : 0.5} />
         <directionalLight 
-          position={[40, 70, 30]} 
-          intensity={1.8} 
+          position={[40, 75, 35]} 
+          intensity={isLightMode ? 2.2 : 1.8} 
           castShadow 
           shadow-mapSize-width={2048} 
           shadow-mapSize-height={2048} 
@@ -79,9 +80,9 @@ export const DigitalTwinScene: React.FC = () => {
           shadow-camera-top={50}
           shadow-camera-bottom={-50}
         />
-        <pointLight position={[0, 20, 0]} intensity={1.4} color="#00e5ff" distance={90} />
-        <pointLight position={[-25, 15, 25]} intensity={0.9} color="#f43f5e" distance={50} />
-        <pointLight position={[25, 15, -25]} intensity={0.9} color="#10b981" distance={50} />
+        <pointLight position={[0, 25, 0]} intensity={isLightMode ? 1.0 : 1.4} color={isLightMode ? '#38bdf8' : '#00e5ff'} distance={90} />
+        <pointLight position={[-25, 15, 25]} intensity={isLightMode ? 0.6 : 0.9} color="#f43f5e" distance={50} />
+        <pointLight position={[25, 15, -25]} intensity={isLightMode ? 0.6 : 0.9} color="#10b981" distance={50} />
 
         <Suspense fallback={null}>
           {/* Ground Terrain */}
@@ -169,6 +170,16 @@ export const DigitalTwinScene: React.FC = () => {
             Focus
           </button>
         )}
+        <div className="w-[1px] h-4 bg-ares-border mx-0.5" />
+        <button
+          onClick={() => setIsLightMode(!isLightMode)}
+          className={`px-2 py-1 rounded transition-colors font-bold ${
+            isLightMode ? 'bg-amber-400/20 text-amber-500 border border-amber-400/40' : 'text-ares-subtext hover:text-ares-text'
+          }`}
+          title="Toggle Day Light / Cyber Dark Theme"
+        >
+          {isLightMode ? '☀️ Light' : '🌙 Dark'}
+        </button>
       </div>
 
       {/* 3D Legend */}

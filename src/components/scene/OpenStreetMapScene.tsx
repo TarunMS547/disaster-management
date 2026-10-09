@@ -12,23 +12,28 @@ import {
   MapPin 
 } from 'lucide-react';
 
-type TileProvider = 'dark' | 'standard' | 'humanitarian';
+type TileProvider = 'light' | 'standard' | 'humanitarian' | 'dark';
 
 const TILE_PROVIDERS: Record<TileProvider, { url: string; attribution: string; name: string }> = {
-  dark: {
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  light: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    name: 'OpenStreetMap (Cyber Dark)',
+    name: 'Carto Light (Clean)',
   },
   standard: {
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    name: 'OpenStreetMap (Standard)',
+    name: 'OpenStreetMap (Standard Light)',
   },
   humanitarian: {
     url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by Humanitarian OpenStreetMap Team',
-    name: 'OpenStreetMap (Humanitarian / Disaster)',
+    name: 'Humanitarian Disaster (Light)',
+  },
+  dark: {
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    name: 'Cyber Dark',
   },
 };
 
@@ -41,7 +46,7 @@ export const OpenStreetMapScene: React.FC = () => {
   const routesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const hazardsLayerGroupRef = useRef<L.LayerGroup | null>(null);
 
-  const [activeProvider, setActiveProvider] = useState<TileProvider>('dark');
+  const [activeProvider, setActiveProvider] = useState<TileProvider>('light');
 
   // 1. Initialize Leaflet Map
   useEffect(() => {
@@ -383,7 +388,7 @@ export const OpenStreetMapScene: React.FC = () => {
       <div className="absolute top-4 left-4 z-[400] flex flex-wrap items-center gap-2">
         <div className="bg-ares-card/90 backdrop-blur-md p-1.5 rounded-lg border border-ares-border flex items-center gap-1 text-xs font-mono shadow-xl">
           <Layers className="w-3.5 h-3.5 text-ares-accent ml-1 mr-1" />
-          {(['standard', 'humanitarian', 'dark'] as const).map(providerKey => (
+          {(['light', 'standard', 'humanitarian', 'dark'] as const).map(providerKey => (
             <button
               key={providerKey}
               onClick={() => setActiveProvider(providerKey)}
@@ -393,7 +398,7 @@ export const OpenStreetMapScene: React.FC = () => {
                   : 'text-ares-subtext hover:text-ares-text'
               }`}
             >
-              {providerKey === 'standard' ? 'OSM Standard' : providerKey === 'humanitarian' ? 'OSM Disaster' : 'OSM Dark'}
+              {providerKey === 'light' ? 'Light Map' : providerKey === 'standard' ? 'OSM Standard' : providerKey === 'humanitarian' ? 'OSM Disaster' : 'Dark'}
             </button>
           ))}
         </div>
