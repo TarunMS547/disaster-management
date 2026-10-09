@@ -61,28 +61,27 @@ export const DigitalTwinScene: React.FC = () => {
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         onPointerMissed={() => selectEntity(null, null)}
       >
-        <color attach="background" args={['#e0f2fe']} />
-        <fog attach="fog" args={['#e0f2fe', 60, 190]} />
+        <color attach="background" args={['#070a11']} />
+        <fog attach="fog" args={['#070a11', 45, 160]} />
 
-        {/* Crisp Daylight Operations Lighting */}
-        <ambientLight intensity={0.9} />
-        <hemisphereLight args={['#e0f2fe', '#cbd5e1', 0.6]} />
+        {/* Dynamic Dramatic Cinematic Cyberpunk Lighting */}
+        <ambientLight intensity={0.5} />
         <directionalLight 
-          position={[45, 80, 35]} 
-          intensity={2.0} 
+          position={[40, 70, 30]} 
+          intensity={1.8} 
           castShadow 
           shadow-mapSize-width={2048} 
           shadow-mapSize-height={2048} 
           shadow-camera-near={10}
           shadow-camera-far={180}
-          shadow-camera-left={-55}
-          shadow-camera-right={55}
-          shadow-camera-top={55}
-          shadow-camera-bottom={-55}
+          shadow-camera-left={-50}
+          shadow-camera-right={50}
+          shadow-camera-top={50}
+          shadow-camera-bottom={-50}
         />
-        <pointLight position={[0, 25, 0]} intensity={0.6} color="#0284c7" distance={80} />
-        <pointLight position={[-25, 20, 25]} intensity={0.4} color="#0369a1" distance={60} />
-        <pointLight position={[25, 20, -25]} intensity={0.4} color="#059669" distance={60} />
+        <pointLight position={[0, 20, 0]} intensity={1.4} color="#00e5ff" distance={90} />
+        <pointLight position={[-25, 15, 25]} intensity={0.9} color="#f43f5e" distance={50} />
+        <pointLight position={[25, 15, -25]} intensity={0.9} color="#10b981" distance={50} />
 
         <Suspense fallback={null}>
           {/* Ground Terrain */}

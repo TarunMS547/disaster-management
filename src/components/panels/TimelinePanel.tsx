@@ -47,8 +47,8 @@ export const TimelinePanel: React.FC = () => {
               onClick={() => { setActiveTab('graph'); setIsExpanded(true); }}
               className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
                 activeTab === 'graph'
-                  ? 'bg-black text-white'
-                  : 'text-black hover:bg-ares-border'
+                  ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                  : 'text-ares-subtext hover:text-ares-text hover:bg-ares-border'
               }`}
             >
               <LineChart className="w-3.5 h-3.5" />
@@ -59,8 +59,8 @@ export const TimelinePanel: React.FC = () => {
               onClick={() => { setActiveTab('transfers'); setIsExpanded(true); }}
               className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
                 activeTab === 'transfers'
-                  ? 'bg-black text-white'
-                  : 'text-black hover:bg-ares-border'
+                  ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                  : 'text-ares-subtext hover:text-ares-text hover:bg-ares-border'
               }`}
             >
               <Truck className="w-3.5 h-3.5" />
@@ -71,8 +71,8 @@ export const TimelinePanel: React.FC = () => {
               onClick={() => { setActiveTab('events'); setIsExpanded(true); }}
               className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
                 activeTab === 'events'
-                  ? 'bg-black text-white'
-                  : 'text-black hover:bg-ares-border'
+                  ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                  : 'text-ares-subtext hover:text-ares-text hover:bg-ares-border'
               }`}
             >
               <List className="w-3.5 h-3.5" />
@@ -83,10 +83,10 @@ export const TimelinePanel: React.FC = () => {
 
         <div 
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-2 text-xs font-mono text-black font-semibold cursor-pointer"
+          className="flex items-center gap-2 text-xs font-mono text-ares-subtext hover:text-ares-text font-semibold cursor-pointer"
         >
           <span>{isExpanded ? 'COLLAPSE' : 'EXPAND PANEL'}</span>
-          {isExpanded ? <ChevronDown className="w-4 h-4 text-black" /> : <ChevronUp className="w-4 h-4 text-black" />}
+          {isExpanded ? <ChevronDown className="w-4 h-4 text-ares-text" /> : <ChevronUp className="w-4 h-4 text-ares-text" />}
         </div>
       </div>
 

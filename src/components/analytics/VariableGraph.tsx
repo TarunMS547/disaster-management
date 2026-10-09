@@ -237,16 +237,16 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
       {/* 1. Header Toolbar with Variable Graph Title, Graph Type, and Time Horizon */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-ares-border pb-3">
         <div className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-ares-accent" />
+          <Activity className="w-5 h-5 text-ares-accent animate-pulse" />
           <div>
-            <h3 className="font-bold font-mono text-sm uppercase text-black tracking-wide flex items-center gap-2">
+            <h3 className="font-bold font-mono text-sm uppercase text-ares-text tracking-wide flex items-center gap-2">
               <span>Interactive Variable Telemetry Graph</span>
-              <span className="text-[11px] px-2 py-0.5 rounded bg-ares-card border border-ares-border text-black font-semibold">
+              <span className="text-[11px] px-2 py-0.5 rounded bg-ares-card border border-ares-border text-ares-accent font-semibold">
                 {activeVariables.length} ACTIVE VARIABLES
               </span>
             </h3>
             {!compact && (
-              <p className="text-xs text-black/80 font-mono mt-0.5">
+              <p className="text-xs text-ares-subtext font-mono mt-0.5">
                 Toggle multi-variable metrics, graph styles, and inspection horizons in real time.
               </p>
             )}
@@ -257,28 +257,28 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           {/* Preset Buttons */}
           <div className="hidden lg:flex items-center bg-ares-card p-1 rounded-lg border border-ares-border text-xs font-mono">
-            <span className="px-2 text-black font-bold uppercase text-[11px]">Presets:</span>
+            <span className="px-2 text-ares-muted font-bold uppercase text-[11px]">Presets:</span>
             <button
               onClick={() => applyPreset('overview')}
-              className="px-2 py-0.5 rounded text-black hover:bg-ares-border font-medium"
+              className="px-2 py-0.5 rounded text-ares-subtext hover:text-ares-text hover:bg-ares-border font-medium"
             >
               Overview
             </button>
             <button
               onClick={() => applyPreset('logistics')}
-              className="px-2 py-0.5 rounded text-black hover:bg-ares-border font-medium"
+              className="px-2 py-0.5 rounded text-ares-subtext hover:text-ares-text hover:bg-ares-border font-medium"
             >
               Fleet
             </button>
             <button
               onClick={() => applyPreset('equity')}
-              className="px-2 py-0.5 rounded text-black hover:bg-ares-border font-medium"
+              className="px-2 py-0.5 rounded text-ares-subtext hover:text-ares-text hover:bg-ares-border font-medium"
             >
               Fairness
             </button>
             <button
               onClick={() => applyPreset('all')}
-              className="px-2 py-0.5 rounded text-black hover:bg-ares-border font-medium"
+              className="px-2 py-0.5 rounded text-ares-subtext hover:text-ares-text hover:bg-ares-border font-medium"
             >
               All
             </button>
@@ -290,8 +290,8 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
               onClick={() => setGraphType('line')}
               className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
                 graphType === 'line'
-                  ? 'bg-ares-accent text-white shadow-sm'
-                  : 'text-black hover:text-ares-accent'
+                  ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                  : 'text-ares-subtext hover:text-ares-accent'
               }`}
               title="Multi-Variable Line Chart"
             >
@@ -302,8 +302,8 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
               onClick={() => setGraphType('area')}
               className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
                 graphType === 'area'
-                  ? 'bg-ares-accent text-white shadow-sm'
-                  : 'text-black hover:text-ares-accent'
+                  ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                  : 'text-ares-subtext hover:text-ares-accent'
               }`}
               title="Multi-Variable Gradient Area Chart"
             >
@@ -314,8 +314,8 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
               onClick={() => setGraphType('bar')}
               className={`px-2.5 py-1 rounded transition-all font-bold flex items-center gap-1 ${
                 graphType === 'bar'
-                  ? 'bg-ares-accent text-white shadow-sm'
-                  : 'text-black hover:text-ares-accent'
+                  ? 'bg-ares-accent text-ares-bg shadow-glow-cyan'
+                  : 'text-ares-subtext hover:text-ares-accent'
               }`}
               title="Multi-Variable Comparative Bar Chart"
             >
@@ -332,8 +332,8 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
                 onClick={() => setTimeHorizon(h)}
                 className={`px-2 py-1 rounded transition-all font-bold ${
                   timeHorizon === h
-                    ? 'bg-black text-white'
-                    : 'text-black hover:bg-ares-border'
+                    ? 'bg-ares-accent text-ares-bg'
+                    : 'text-ares-subtext hover:bg-ares-border hover:text-ares-text'
                 }`}
               >
                 {h === 'all' ? 'All' : `${h}T`}
@@ -345,7 +345,7 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
 
       {/* 2. Interactive Variable Selector Pills (Clickable Toggles) */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-mono font-bold text-black uppercase mr-1">Variables:</span>
+        <span className="text-xs font-mono font-bold text-ares-muted uppercase mr-1">Variables:</span>
         {AVAILABLE_VARIABLES.map(v => {
           const isSelected = selectedVarIds.has(v.id);
           const val = latestData[v.id] ?? 0;
@@ -356,8 +356,8 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
               onClick={() => toggleVariable(v.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-mono text-xs font-semibold transition-all ${
                 isSelected
-                  ? 'bg-white border-black shadow-sm text-black ring-1 ring-black/20'
-                  : 'bg-ares-card border-ares-border text-black/60 hover:text-black hover:border-black/40'
+                  ? 'bg-ares-card border-ares-accent text-ares-text shadow-glow-cyan ring-1 ring-ares-accent/30'
+                  : 'bg-ares-surface border-ares-border text-ares-muted hover:text-ares-text hover:border-ares-muted'
               }`}
             >
               <span
@@ -365,7 +365,7 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
                 style={{ backgroundColor: v.color }}
               />
               <span className="truncate">{v.name}</span>
-              <span className="font-bold text-black ml-1">
+              <span className="font-bold text-ares-accent ml-1">
                 {val}{v.unit === '%' ? '%' : ''}
               </span>
             </button>
@@ -378,38 +378,38 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           {graphType === 'line' ? (
             <LineChart data={chartData} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
               <XAxis
                 dataKey="tick"
-                stroke="#000000"
-                tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
-                label={{ value: 'Simulation Tick', position: 'insideBottom', offset: -5, fill: '#000000', fontSize: 12 }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
+                label={{ value: 'Simulation Tick', position: 'insideBottom', offset: -5, fill: '#64748b', fontSize: 12 }}
               />
               <YAxis
-                stroke="#000000"
-                tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: '#000000',
+                  backgroundColor: '#0d131f',
+                  borderColor: '#1e293b',
                   borderWidth: '1.5px',
                   borderRadius: '8px',
-                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
-                  color: '#000000',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.6)',
+                  color: '#f8fafc',
                   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                   fontSize: '12px',
                   fontWeight: 'bold',
                 }}
-                labelStyle={{ color: '#000000', fontWeight: 'bold', marginBottom: '4px' }}
-                itemStyle={{ color: '#000000', padding: '2px 0' }}
+                labelStyle={{ color: '#00e5ff', fontWeight: 'bold', marginBottom: '4px' }}
+                itemStyle={{ color: '#f8fafc', padding: '2px 0' }}
               />
               <Legend
                 wrapperStyle={{
-                  color: '#000000',
+                  color: '#94a3b8',
                   fontFamily: 'ui-monospace, monospace',
                   fontSize: '12px',
-                  fontWeight: 600,
+                  fontWeight: 500,
                   paddingTop: '8px',
                 }}
               />
@@ -436,37 +436,38 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
                   </linearGradient>
                 ))}
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
               <XAxis
                 dataKey="tick"
-                stroke="#000000"
-                tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
-                label={{ value: 'Simulation Tick', position: 'insideBottom', offset: -5, fill: '#000000', fontSize: 12 }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
+                label={{ value: 'Simulation Tick', position: 'insideBottom', offset: -5, fill: '#64748b', fontSize: 12 }}
               />
               <YAxis
-                stroke="#000000"
-                tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: '#000000',
+                  backgroundColor: '#0d131f',
+                  borderColor: '#1e293b',
                   borderWidth: '1.5px',
                   borderRadius: '8px',
-                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
-                  color: '#000000',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.6)',
+                  color: '#f8fafc',
                   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                   fontSize: '12px',
                   fontWeight: 'bold',
                 }}
-                labelStyle={{ color: '#000000', fontWeight: 'bold' }}
+                labelStyle={{ color: '#00e5ff', fontWeight: 'bold' }}
+                itemStyle={{ color: '#f8fafc', padding: '2px 0' }}
               />
               <Legend
                 wrapperStyle={{
-                  color: '#000000',
+                  color: '#94a3b8',
                   fontFamily: 'ui-monospace, monospace',
                   fontSize: '12px',
-                  fontWeight: 600,
+                  fontWeight: 500,
                   paddingTop: '8px',
                 }}
               />
@@ -485,37 +486,38 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
             </AreaChart>
           ) : (
             <BarChart data={chartData} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
               <XAxis
                 dataKey="tick"
-                stroke="#000000"
-                tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
-                label={{ value: 'Simulation Tick', position: 'insideBottom', offset: -5, fill: '#000000', fontSize: 12 }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
+                label={{ value: 'Simulation Tick', position: 'insideBottom', offset: -5, fill: '#64748b', fontSize: 12 }}
               />
               <YAxis
-                stroke="#000000"
-                tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: '#000000',
+                  backgroundColor: '#0d131f',
+                  borderColor: '#1e293b',
                   borderWidth: '1.5px',
                   borderRadius: '8px',
-                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
-                  color: '#000000',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.6)',
+                  color: '#f8fafc',
                   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                   fontSize: '12px',
                   fontWeight: 'bold',
                 }}
-                labelStyle={{ color: '#000000', fontWeight: 'bold' }}
+                labelStyle={{ color: '#00e5ff', fontWeight: 'bold' }}
+                itemStyle={{ color: '#f8fafc', padding: '2px 0' }}
               />
               <Legend
                 wrapperStyle={{
-                  color: '#000000',
+                  color: '#94a3b8',
                   fontFamily: 'ui-monospace, monospace',
                   fontSize: '12px',
-                  fontWeight: 600,
+                  fontWeight: 500,
                   paddingTop: '8px',
                 }}
               />
@@ -534,14 +536,14 @@ export const VariableGraph: React.FC<VariableGraphProps> = ({
       </div>
 
       {/* 4. Variable Stats Footnote Bar */}
-      <div className="pt-2 border-t border-ares-border flex flex-wrap items-center justify-between text-xs font-mono text-black">
+      <div className="pt-2 border-t border-ares-border flex flex-wrap items-center justify-between text-xs font-mono text-ares-muted">
         <div className="flex items-center gap-4">
-          <span className="font-bold uppercase text-[11px] text-black">Horizon Coverage:</span>
-          <span>Ticks {chartData[0]?.tick ?? 0} &rarr; {chartData[chartData.length - 1]?.tick ?? 0}</span>
-          <span className="text-black/50">|</span>
-          <span>Sample Points: {chartData.length}</span>
+          <span className="font-bold uppercase text-[11px] text-ares-text">Horizon Coverage:</span>
+          <span className="text-ares-subtext">Ticks {chartData[0]?.tick ?? 0} &rarr; {chartData[chartData.length - 1]?.tick ?? 0}</span>
+          <span className="text-ares-muted">|</span>
+          <span className="text-ares-subtext">Sample Points: {chartData.length}</span>
         </div>
-        <div className="text-[11px] font-semibold text-black">
+        <div className="text-[11px] font-semibold text-ares-accent">
           Simulation Engine Status: Authoritative Continuous Telemetry
         </div>
       </div>

@@ -10,7 +10,7 @@ html {
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 /* Enhanced readability & larger micro-typography for dashboard badges and tables */
@@ -30,18 +30,18 @@ html {
   font-size: 13.5px !important;
 }
 
-/* Leaflet Bright Daylight Theme Overrides */
+/* Leaflet Dark Theme Overrides */
 .leaflet-container {
-  background-color: #f1f5f9 !important;
+  background-color: #070a11 !important;
   font-family: inherit;
   font-size: 13px !important;
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 0 10px rgba(2, 132, 199, 0.1) !important;
+  background: #0d131f !important;
+  color: #f8fafc !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 229, 255, 0.2) !important;
   border-radius: 8px !important;
 }
 
@@ -50,98 +50,100 @@ html {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
   font-size: 13px !important;
   line-height: 1.5 !important;
+  color: #f8fafc !important;
 }
 
 .leaflet-popup-close-button {
-  color: #64748b !important;
+  color: #94a3b8 !important;
 }
 
 .leaflet-control-zoom a {
-  background-color: #ffffff !important;
-  color: #0284c7 !important;
-  border-color: #cbd5e1 !important;
+  background-color: #0d131f !important;
+  color: #00e5ff !important;
+  border-color: #1e293b !important;
 }
 
 .leaflet-control-zoom a:hover {
-  background-color: #f1f5f9 !important;
-  color: #0369a1 !important;
+  background-color: #131b2e !important;
+  color: #38bdf8 !important;
 }
 
 .leaflet-control-attribution {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: rgba(13, 19, 31, 0.85) !important;
   color: #64748b !important;
   font-size: 10px !important;
 }
 
 .leaflet-control-attribution a {
-  color: #0284c7 !important;
+  color: #00e5ff !important;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #f8fafc;
-  color: #000000;
+  background-color: #070a11;
+  color: #f8fafc;
   font-family: 'DM Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* High-contrast solid dark black font rules */
+/* High-contrast dark theme font rules */
 .text-ares-text {
-  color: #000000 !important;
+  color: #f8fafc !important;
 }
 
 .text-ares-subtext {
-  color: #111827 !important;
+  color: #94a3b8 !important;
 }
 
 .text-ares-muted {
-  color: #1f2937 !important;
+  color: #64748b !important;
 }
 
-/* Clean bright scrollbars */
+/* Dark cyber scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #070a11;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #1e293b;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #334155;
 }
 
-/* Bright technical grid background */
+/* Dark cyber grid background */
 .cyber-grid {
   background-image: 
-    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
 .radar-glow {
-  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.15), inset 0 0 10px rgba(2, 132, 199, 0.05);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.25), inset 0 0 15px rgba(0, 229, 255, 0.15);
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(13, 19, 31, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(0, 229, 255, 0.15);
 }
 
 .glass-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  background: rgba(19, 27, 46, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
 }
 
 .hud-border-cyan {

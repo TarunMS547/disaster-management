@@ -8,7 +8,7 @@ export const CityGround: React.FC = () => {
       {/* 1. Asphalt & Concrete Metropolitan Base Deck */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
         <planeGeometry args={[140, 140]} />
-        <meshStandardMaterial color="#cbd5e1" roughness={0.9} metalness={0.05} />
+        <meshStandardMaterial color="#0f172a" roughness={0.9} metalness={0.1} />
       </mesh>
 
       {/* 2. Green Grass Parkland Polygons */}
@@ -22,7 +22,7 @@ export const CityGround: React.FC = () => {
       ].map(([gx, gz, gw, gd], i) => (
         <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[gx, 0.01, gz]} receiveShadow>
           <planeGeometry args={[gw, gd]} />
-          <meshStandardMaterial color="#16a34a" roughness={0.95} />
+          <meshStandardMaterial color="#14532d" roughness={0.95} />
         </mesh>
       ))}
 
@@ -30,16 +30,16 @@ export const CityGround: React.FC = () => {
       {/* Excavated River Bed */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.8, 12]}>
         <planeGeometry args={[130, 9.5]} />
-        <meshStandardMaterial color="#075985" roughness={0.9} />
+        <meshStandardMaterial color="#022c43" roughness={0.9} />
       </mesh>
 
       {/* Dynamic Water Surface with Deep Specular Glint */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 12]}>
         <planeGeometry args={[130, 9.4]} />
         <meshStandardMaterial 
-          color="#0284c7" 
+          color="#0369a1" 
           roughness={0.08} 
-          metalness={0.8} 
+          metalness={0.9} 
           transparent 
           opacity={0.88} 
         />
@@ -48,11 +48,11 @@ export const CityGround: React.FC = () => {
       {/* Concrete Embankment Sea-Walls (North & South) */}
       <mesh position={[0, 0.2, 7.2]} receiveShadow>
         <boxGeometry args={[130, 0.6, 0.5]} />
-        <meshStandardMaterial color="#94a3b8" roughness={0.8} />
+        <meshStandardMaterial color="#475569" roughness={0.8} />
       </mesh>
       <mesh position={[0, 0.2, 16.8]} receiveShadow>
         <boxGeometry args={[130, 0.6, 0.5]} />
-        <meshStandardMaterial color="#94a3b8" roughness={0.8} />
+        <meshStandardMaterial color="#475569" roughness={0.8} />
       </mesh>
 
       {/* 4. 3D Trees and Urban Parks */}

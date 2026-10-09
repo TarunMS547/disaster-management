@@ -142,11 +142,11 @@ export const DashboardPage: React.FC = () => {
       {/* Real-Time Variable Telemetry Graph */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-mono font-bold text-black uppercase tracking-wider flex items-center gap-2">
-            <Activity className="w-4 h-4 text-ares-accent" />
+          <h2 className="text-sm font-mono font-bold text-ares-text uppercase tracking-wider flex items-center gap-2">
+            <Activity className="w-4 h-4 text-ares-accent animate-pulse" />
             <span>Active Simulation Telemetry & Variable Projections</span>
           </h2>
-          <span className="text-xs text-black font-mono font-bold">
+          <span className="text-xs text-ares-accent font-mono font-bold">
             SCENARIO: {state.scenarioKey.toUpperCase()} • TICK {state.currentTick}
           </span>
         </div>

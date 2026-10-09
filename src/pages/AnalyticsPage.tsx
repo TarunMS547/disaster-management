@@ -179,44 +179,44 @@ export const AnalyticsPage: React.FC = () => {
 
       {/* Secondary Resource Deficit Distribution Breakdown */}
       <div className="p-5 rounded-xl bg-ares-surface border border-ares-border space-y-4">
-        <h3 className="font-bold uppercase text-black text-sm font-mono flex items-center justify-between">
+        <h3 className="font-bold uppercase text-ares-text text-sm font-mono flex items-center justify-between">
           <span>Unmet Resource Deficit Distribution by Category</span>
-          <span className="text-xs text-black/70">Authoritative Real-Time Inventory Gaps</span>
+          <span className="text-xs text-ares-subtext">Authoritative Real-Time Inventory Gaps</span>
         </h3>
         <div className="h-64">
           {unmetByResourceData.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-black font-semibold">
+            <div className="h-full flex items-center justify-center text-ares-muted font-semibold">
               No active unmet resource deficits in this simulation horizon. All allocations optimal.
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={unmetByResourceData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                 <XAxis 
                   dataKey="resource" 
-                  stroke="#000000" 
-                  tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                  stroke="#64748b" 
+                  tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                 />
                 <YAxis 
-                  stroke="#000000" 
-                  tick={{ fill: '#000000', fontSize: 12, fontWeight: 600 }}
+                  stroke="#64748b" 
+                  tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                 />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#ffffff', 
-                    borderColor: '#000000', 
+                    backgroundColor: '#0d131f', 
+                    borderColor: '#1e293b', 
                     borderWidth: '1.5px',
                     borderRadius: '8px',
-                    color: '#000000',
+                    color: '#f8fafc',
                     fontFamily: 'ui-monospace, monospace',
                     fontSize: '12px',
                     fontWeight: 'bold',
-                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)'
+                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.6)'
                   }} 
-                  itemStyle={{ color: '#000000' }}
-                  labelStyle={{ color: '#000000', fontWeight: 'bold' }}
+                  itemStyle={{ color: '#f8fafc' }}
+                  labelStyle={{ color: '#00e5ff', fontWeight: 'bold' }}
                 />
-                <Bar dataKey="quantity" fill="#e11d48" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="quantity" fill="#f43f5e" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}

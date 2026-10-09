@@ -9,20 +9,20 @@ export default {
     extend: {
       colors: {
         ares: {
-          bg: '#f8fafc',
-          surface: '#ffffff',
-          card: '#f1f5f9',
-          border: '#e2e8f0',
-          hover: '#e2e8f0',
-          accent: '#0284c7',
-          accentMuted: 'rgba(2, 132, 199, 0.12)',
-          blue: '#0284c7',
-          amber: '#d97706',
-          critical: '#e11d48',
-          success: '#059669',
-          muted: '#1f2937',
-          text: '#000000',
-          subtext: '#111827'
+          bg: '#070a11',
+          surface: '#0d131f',
+          card: '#131b2e',
+          border: '#1e293b',
+          hover: '#24324f',
+          accent: '#00e5ff',
+          accentMuted: 'rgba(0, 229, 255, 0.15)',
+          blue: '#00e5ff',
+          amber: '#f59e0b',
+          critical: '#f43f5e',
+          success: '#10b981',
+          muted: '#64748b',
+          text: '#f8fafc',
+          subtext: '#94a3b8'
         }
       },
       fontSize: {
