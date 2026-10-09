@@ -4,14 +4,37 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 17.5px;
+  -webkit-text-size-adjust: 100%;
+}
+
 :root {
   color-scheme: light;
+}
+
+/* Enhanced readability & larger micro-typography for dashboard badges and tables */
+.text-\[9px\], [class*="text-[9px]"] {
+  font-size: 11px !important;
+}
+
+.text-\[10px\], [class*="text-[10px]"] {
+  font-size: 12px !important;
+}
+
+.text-\[11px\], [class*="text-[11px]"] {
+  font-size: 13px !important;
+}
+
+.text-\[12px\], [class*="text-[12px]"] {
+  font-size: 13.5px !important;
 }
 
 /* Leaflet Bright Daylight Theme Overrides */
 .leaflet-container {
   background-color: #f1f5f9 !important;
   font-family: inherit;
+  font-size: 13px !important;
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
@@ -25,7 +48,7 @@
 .leaflet-popup-content {
   margin: 12px 14px !important;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
   line-height: 1.5 !important;
 }
 

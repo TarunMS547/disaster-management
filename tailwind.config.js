@@ -25,6 +25,15 @@ export default {
           subtext: '#475569'
         }
       },
+      fontSize: {
+        '2xs': ['0.75rem', { lineHeight: '1.05rem' }],
+        'xs': ['0.825rem', { lineHeight: '1.25rem' }],
+        'sm': ['0.95rem', { lineHeight: '1.4rem' }],
+        'base': ['1.075rem', { lineHeight: '1.65rem' }],
+        'lg': ['1.22rem', { lineHeight: '1.75rem' }],
+        'xl': ['1.38rem', { lineHeight: '1.875rem' }],
+        '2xl': ['1.68rem', { lineHeight: '2.15rem' }],
+      },
       fontFamily: {
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
