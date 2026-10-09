@@ -1,6 +1,12 @@
 import React from 'react';
 import { Text } from '@react-three/drei';
+import * as THREE from 'three';
 import { Vehicle } from '../../types/simulation';
+import { 
+  RealisticAmbulance, 
+  RealisticCargoTruck, 
+  RealisticMedicalDrone 
+} from './models/RealisticVehicles';
 
 interface VehicleMarkerProps {
   vehicle: Vehicle;
@@ -20,8 +26,7 @@ export const VehicleMarker: React.FC<VehicleMarkerProps> = ({
   const isTruck = vehicle.type === 'heavy_cargo_truck';
   const isInTransit = vehicle.status === 'in_transit';
 
-  const baseElevation = isDrone ? 4.5 : 0.8;
-  const markerColor = isInTransit ? '#00e5ff' : vehicle.status === 'disabled' ? '#ef4444' : '#94a3b8';
+  const baseElevation = isDrone ? 4.5 : 0.05;
 
   return (
     <group
@@ -40,73 +45,47 @@ export const VehicleMarker: React.FC<VehicleMarkerProps> = ({
         document.body.style.cursor = 'auto';
       }}
     >
-      {/* 1. Vehicle Body */}
+      {/* 1. Realistic 3D Vehicle Model */}
       {isDrone ? (
-        // Drone quadcopter shape
-        <group>
-          <mesh>
-            <sphereGeometry args={[0.7, 8, 8]} />
-            <meshStandardMaterial color="#00e5ff" emissive="#00e5ff" emissiveIntensity={0.5} />
-          </mesh>
-          <mesh rotation={[0, 0, Math.PI / 4]}>
-            <boxGeometry args={[2.2, 0.1, 0.3]} />
-            <meshBasicMaterial color="#38bdf8" />
-          </mesh>
-          <mesh rotation={[0, 0, -Math.PI / 4]}>
-            <boxGeometry args={[2.2, 0.1, 0.3]} />
-            <meshBasicMaterial color="#38bdf8" />
-          </mesh>
-        </group>
+        <RealisticMedicalDrone isSelected={isSelected} isInTransit={isInTransit} />
       ) : isTruck ? (
-        // Heavy Cargo Truck
-        <group>
-          <mesh position={[0, 0.4, 0]}>
-            <boxGeometry args={[1.8, 1.2, 3.2]} />
-            <meshStandardMaterial color={markerColor} metalness={0.6} roughness={0.3} />
-          </mesh>
-          <mesh position={[0, 0.2, 1.8]}>
-            <boxGeometry args={[1.6, 0.9, 1.2]} />
-            <meshStandardMaterial color="#1e293b" />
-          </mesh>
-        </group>
+        <RealisticCargoTruck isSelected={isSelected} isInTransit={isInTransit} />
       ) : (
-        // Rapid Response Van / Amphibious
-        <mesh position={[0, 0.3, 0]}>
-          <boxGeometry args={[1.4, 0.9, 2.2]} />
-          <meshStandardMaterial color={markerColor} metalness={0.5} roughness={0.4} />
-        </mesh>
+        <RealisticAmbulance isSelected={isSelected} isInTransit={isInTransit} />
       )}
 
-      {/* 2. Selection Ring */}
+      {/* 2. Selection Ring Decal */}
       {isSelected && (
-        <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[1.8, 2.2, 24]} />
-          <meshBasicMaterial color="#00e5ff" side={2} />
+        <mesh position={[0, isDrone ? -4.3 : 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[2.5, 2.9, 24]} />
+          <meshBasicMaterial color="#00e5ff" side={THREE.DoubleSide} transparent opacity={0.8} />
         </mesh>
       )}
 
-      {/* 3. Name & Load Indicator */}
-      <group position={[0, isDrone ? 1.8 : 2.2, 0]}>
+      {/* 3. Name & Manifest HUD Tag */}
+      <group position={[0, isDrone ? 2.5 : 2.8, 0]}>
         <Text
           fontSize={0.9}
-          color="#f8fafc"
+          color="#ffffff"
           anchorX="center"
           anchorY="middle"
-          outlineWidth={0.06}
+          outlineWidth={0.08}
           outlineColor="#090d16"
+          fontWeight="bold"
         >
           {vehicle.name}
         </Text>
         <Text
-          position={[0, -0.7, 0]}
-          fontSize={0.7}
-          color={markerColor}
+          position={[0, -0.65, 0]}
+          fontSize={0.65}
+          color={isInTransit ? '#00e5ff' : vehicle.status === 'disabled' ? '#ef4444' : '#94a3b8'}
           anchorX="center"
           anchorY="middle"
-          outlineWidth={0.04}
+          outlineWidth={0.05}
           outlineColor="#090d16"
+          fontWeight="bold"
         >
-          {isInTransit ? `CARGO: ${vehicle.currentLoad}/${vehicle.capacity}` : `STATUS: ${vehicle.status.toUpperCase()}`}
+          {isInTransit ? `CARGO: ${vehicle.currentLoad}/${vehicle.capacity} UNITS` : `STATUS: ${vehicle.status.toUpperCase()}`}
         </Text>
       </group>
     </group>

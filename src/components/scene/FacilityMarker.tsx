@@ -1,6 +1,13 @@
 import React from 'react';
 import { Text } from '@react-three/drei';
+import * as THREE from 'three';
 import { Facility } from '../../types/simulation';
+import { 
+  RealisticHospitalModel, 
+  RealisticWarehouseModel, 
+  RealisticCommandHQModel, 
+  RealisticShelterModel 
+} from './models/RealisticFacilities';
 
 interface FacilityMarkerProps {
   facility: Facility;
@@ -16,47 +23,21 @@ export const FacilityMarker: React.FC<FacilityMarkerProps> = ({
   const [hovered, setHovered] = React.useState(false);
   const pos = facility.position;
 
-  // Type styling
-  const config = React.useMemo(() => {
+  const isOffline = facility.operationalStatus === 'offline';
+
+  const typeConfig = React.useMemo(() => {
     switch (facility.type) {
       case 'hospital':
-        return {
-          color: '#f43f5e',
-          beaconColor: '#f43f5e',
-          typeLabel: 'HOSPITAL',
-          height: 4.5,
-          radius: 2.2,
-        };
+        return { tagColor: '#f43f5e', label: 'TRAUMA HOSPITAL', tagHeight: 11.5 };
       case 'shelter':
-        return {
-          color: '#10b981',
-          beaconColor: '#10b981',
-          typeLabel: 'SHELTER',
-          height: 3.2,
-          radius: 2.8,
-        };
+        return { tagColor: '#10b981', label: 'CIVIL SHELTER', tagHeight: 6.8 };
       case 'warehouse':
-        return {
-          color: '#38bdf8',
-          beaconColor: '#0ea5e9',
-          typeLabel: 'DEPOT',
-          height: 3.8,
-          radius: 3.0,
-        };
+        return { tagColor: '#38bdf8', label: 'LOGISTICS DEPOT', tagHeight: 7.8 };
       case 'response_center':
       default:
-        return {
-          color: '#00e5ff',
-          beaconColor: '#00e5ff',
-          typeLabel: 'HQ',
-          height: 6.0,
-          radius: 2.5,
-        };
+        return { tagColor: '#00e5ff', label: 'OPERATIONS HQ', tagHeight: 16.5 };
     }
   }, [facility.type]);
-
-  const isOffline = facility.operationalStatus === 'offline';
-  const effectiveColor = isOffline ? '#475569' : config.color;
 
   return (
     <group
@@ -75,87 +56,60 @@ export const FacilityMarker: React.FC<FacilityMarkerProps> = ({
         document.body.style.cursor = 'auto';
       }}
     >
-      {/* 1. Base Building Geometry */}
-      {facility.type === 'shelter' ? (
-        // Dome for shelters
-        <mesh position={[0, config.height / 2, 0]}>
-          <sphereGeometry args={[config.radius, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
-          <meshStandardMaterial 
-            color={effectiveColor} 
-            metalness={0.4} 
-            roughness={0.3} 
-            wireframe={hovered}
-          />
-        </mesh>
-      ) : facility.type === 'response_center' ? (
-        // Spire for emergency HQ
-        <mesh position={[0, config.height / 2, 0]}>
-          <coneGeometry args={[config.radius, config.height, 6]} />
-          <meshStandardMaterial 
-            color={effectiveColor} 
-            metalness={0.7} 
-            roughness={0.2} 
-            wireframe={hovered}
-          />
-        </mesh>
-      ) : (
-        // Hexagonal block for hospitals & warehouses
-        <mesh position={[0, config.height / 2, 0]}>
-          <cylinderGeometry args={[config.radius, config.radius * 1.1, config.height, 6]} />
-          <meshStandardMaterial 
-            color={effectiveColor} 
-            metalness={0.5} 
-            roughness={0.3} 
-            wireframe={hovered}
-          />
-        </mesh>
+      {/* 1. Realistic 3D Architectural Model */}
+      {facility.type === 'hospital' && (
+        <RealisticHospitalModel facility={facility} isSelected={isSelected} />
+      )}
+      {facility.type === 'warehouse' && (
+        <RealisticWarehouseModel facility={facility} isSelected={isSelected} />
+      )}
+      {facility.type === 'response_center' && (
+        <RealisticCommandHQModel facility={facility} isSelected={isSelected} />
+      )}
+      {facility.type === 'shelter' && (
+        <RealisticShelterModel facility={facility} isSelected={isSelected} />
       )}
 
-      {/* 2. Top Beacon Light */}
-      {!isOffline && (
-        <group position={[0, config.height + 0.5, 0]}>
-          <mesh>
-            <sphereGeometry args={[0.5, 12, 12]} />
-            <meshStandardMaterial 
-              color={config.beaconColor} 
-              emissive={config.beaconColor} 
-              emissiveIntensity={2} 
-            />
-          </mesh>
-          <pointLight color={config.beaconColor} intensity={2} distance={12} />
-        </group>
-      )}
-
-      {/* 3. Selection Hologram Ring */}
+      {/* 2. Selection Base Ground Decal */}
       {isSelected && (
-        <mesh position={[0, 0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[config.radius * 1.3, config.radius * 1.5, 32]} />
-          <meshBasicMaterial color="#00e5ff" side={2} transparent opacity={0.8} />
+        <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[5.2, 5.8, 36]} />
+          <meshBasicMaterial color="#00e5ff" side={THREE.DoubleSide} transparent opacity={0.9} />
         </mesh>
       )}
 
-      {/* 4. Floating Holographic Facility Tag */}
-      <group position={[0, config.height + 2.5, 0]}>
+      {/* Hover Pulse Ring */}
+      {hovered && !isSelected && (
+        <mesh position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[5.0, 5.3, 36]} />
+          <meshBasicMaterial color="#ffffff" side={THREE.DoubleSide} transparent opacity={0.5} />
+        </mesh>
+      )}
+
+      {/* 3. High-Definition Holographic Facility Header Tag */}
+      <group position={[0, typeConfig.tagHeight, 0]}>
         <Text
-          fontSize={1.3}
-          color="#f8fafc"
+          fontSize={1.25}
+          color="#ffffff"
           anchorX="center"
           anchorY="middle"
-          outlineWidth={0.08}
+          outlineWidth={0.12}
           outlineColor="#090d16"
+          fontWeight="bold"
         >
           {facility.name.toUpperCase()}
         </Text>
         <Text
-          position={[0, -1.0, 0]}
-          fontSize={0.9}
-          color={effectiveColor}
+          position={[0, -0.9, 0]}
+          fontSize={0.85}
+          color={isOffline ? '#ef4444' : typeConfig.tagColor}
           anchorX="center"
           anchorY="middle"
-          outlineWidth={0.05}
+          outlineWidth={0.08}
           outlineColor="#090d16"
+          fontWeight="bold"
         >
-          {`[${config.typeLabel}] ${isOffline ? 'OFFLINE' : `POP: ${facility.population}`}`}
+          {`[${typeConfig.label}] ${isOffline ? 'OFFLINE / BREACHED' : `POP: ${facility.population}`}`}
         </Text>
       </group>
     </group>
